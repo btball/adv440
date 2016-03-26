@@ -1,0 +1,343 @@
+OBJECT EVERYTHING, =ALL   # Dummy for ALL processing
+#
+OBJECT IT, OBJ, OBJE, OBJEC, OBJECT, THEM, HIM # Dummy for IT processing.
+#
+OBJECT BRIDGE       # Doubles for all bridges!
+#
+#
+FRAGMENT VENDING.INFO
+   "Drop coins here to receive fresh batteries." 
+#
+OBJECT KEYS, KEY
+  set of keys
+  %There are some keys on the ground here.
+OBJECT LAMP, HEADLAMP, LANTERN
+  brass lantern
+  %[There is a shiny brass lamp nearby./
+   There is a lamp shining nearby.]
+OBJECT GRATE
+  %[The grate is locked./
+   The grate is open.]
+OBJECT CAGE
+  wicker cage
+  %There is a small wicker cage discarded nearby.
+OBJECT ROD, =WAND
+  black rod
+  %A three foot black rod with a rusty star on an end lies nearby.
+OBJECT DYNAMITE
+  black rod
+  %A three foot black rod with a rusty mark on an end lies nearby.
+OBJECT STEPS
+  %[Rough stone steps lead down the pit./
+   Rough stone steps lead up the dome.]
+OBJECT BIRD
+  little bird in cage
+  %[A cheerful little bird is sitting here singing./
+   There is a little bird in the cage.]
+OBJECT DOOR
+  %[The way north is barred by a massive, rusty, iron door./
+   The way north leads through a massive, rusty, iron door.]
+OBJECT PILLOW, VELVET
+  Velvet pillow
+  %A small velvet pillow lies on the floor.
+OBJECT SNAKE
+  %[A huge green fierce snake bars the way!/]
+OBJECT FISSURE
+  %[/
+   A crystal bridge now spans the fissure./
+   The crystal bridge has vanished!]
+OBJECT TABLET
+  %A massive stone tablet embedded in the wall reads: "Congratulations on
+   bringing light into the dark room!"
+OBJECT CLAM
+  giant clam  >grunt!<
+  %There is an enormous clam here with its shell tightly closed.
+OBJECT OYSTER
+  giant oyster  >groan!<
+  %[There is an enormous oyster here with its shell tightly closed./
+   Interesting.  There seems to be something written on the underside of
+   the oyster.]
+OBJECT MAGAZINES, ISSUE, SPELUNKER
+  "Spelunker Today"
+  %there are a few recent issues of "Spelunker Today" magazine here.
+OBJECT FOOD, RATIONS
+  tasty food
+  %There is food here.
+OBJECT BOTTLE, JAR
+  small bottle
+  %[There is a bottle of water here./
+   There is an empty bottle here./
+   There is a bottle of oil here.]
+OBJECT WATER, H2O
+  water in the bottle
+OBJECT OIL
+#   oil in the bottle
+OBJECT MIRROR
+  %
+OBJECT PLANT, BEANSTALK
+  %[There is a tiny little plant in the pit, murmuring "water, water, ..."/
+#    The plant spurts into furious growth for a few seconds./
+   There is a 12-foot-tall beanstalk stretching up out of the pit,
+   bellowing "water!! water!!"/
+#    The plant grows explosively, almost filling the bottom of the pit./
+   There is a gigantic beanstalk stretching all the way up to the hole./
+   You've over-watered the plant!  It's shriveling up!  It's, It's...]
+OBJECT -PLANT2
+  %[/
+   The top of a 12-foot-tall beanstalk is poking out of the west pit./
+   There is a huge beanstalk growing out of the west pit up to the hole.]
+OBJECT STALACTITE
+  %
+OBJECT SHADOW, FIGURE
+  %The shadowy figure seems to be trying to attract your attention.
+OBJECT AXE
+  Dwarf's axe
+  %[There is a little axe here./
+   There is a little axe lying beside the bear.]
+OBJECT DRAWING, DRAWINGS
+  %
+#OBJECT PIRATE
+#  %
+OBJECT DRAGON
+  %[A huge green fierce dragon bars the way!/
+   Congratulations!  You have just vanquished a dragon with your bare
+   hands!  (unbelievable, isn't it?)/
+   The body of a huge green dead dragon is lying off to one side.]
+OBJECT CHASM
+  %[A rickety wooden bridge extends across the chasm, vanishing into the
+   mist.  A sign posted on the bridge reads, "Stop! Pay troll!"/
+   The wreckage of a bridge (and a dead bear) can be seen at the bottom of
+   the chasm.]
+OBJECT TROLL
+  %[A burly troll stands by the bridge and insists you throw him a treasure
+   before you may cross./
+   The troll steps out from beneath the bridge and blocks your way./]
+OBJECT -TROLL2
+  %The troll is nowhere to be seen.
+OBJECT BEAR
+  %[There is a ferocious cave bear eying you from the far end of the room!/
+   There is a gentle cave bear sitting placidly in one corner./
+   There is a contented-looking bear wandering about nearby./]
+OBJECT MESSAGE
+  %There is a message scrawled in the dust in a flowery script, reading:
+   "This is not the maze where the pirate leaves his treasure chest."
+OBJECT VOLCANO, GEYSER
+  %
+OBJECT MACHINE, VENDING
+  %There is a massive vending machine here.  The instructions on it read:
+   "Drop coins here to receive fresh batteries."
+OBJECT BATTERY, BATTERIES
+  Batteries
+  %[There are fresh batteries here./
+   Some worn-out batteries have been discarded nearby.]
+OBJECT CARPET, MOSS
+  %
+OBJECT OWL
+OBJECT WEB
+  %A large untidy spider's web covers one corner of the cave.
+OBJECT SPIDER
+  %A huge black hairy spider crouches in one corner of the web.
+OBJECT DOCUMENTS, PAPERS, LEGAL, DEED, DEEDS, PLAN, PLANS
+  legal documents
+  %[Some legal documents are stuck to the web where the spider was./
+   There are some legal documents here.]
+OBJECT SPOON, INSCRIPTION
+  tarnished spoon
+  %A tarnished spoon lies here.
+OBJECT HORN
+  little horn
+  %There is a little horn here.
+OBJECT RAT, RATS
+  %[/
+   /
+   There is some *thing* swimming in the sewage!/
+   You feel a vicious bite on the ankle from something in the sewage!/
+   A large black sewer rat eyes you hungrily from the edge of the sewage,
+   then slips below the surface............./
+   There are sewer rats all around you, their eyes glinting in the lamp
+   light./
+   You feel several bites on your legs.  You try to protect them, but more
+   rats sink their teeth into your arms, then one leaps from the sewage and
+   hangs on to your ear, weighing you down, now they are at your
+   throat.............]
+OBJECT GIANT, MAN
+  %[/
+   Suddenly a giant hand descends from above, picks you up and shakes you
+   scattering your possessions across the floor./
+   The giant reclines on the couch eating eggs!/
+   A giant hand descends from above and picks you up.]
+OBJECT FLAGSTONE, FLAGSTONES
+  %
+# Note all objects must be together and must be in the the correct groupings
+#  first.low.tr first.med.tr, first.high.tr
+Object first.treasure
+# Object first.low.tr
+OBJECT NUGGET
+  large gold nugget
+  %There is a large sparkling nugget of gold here!
+OBJECT DIAMONDS
+  several diamonds
+  %There are diamonds here!
+OBJECT BARS, SILVER
+  bars of silver
+  %There are bars of silver here!
+OBJECT JEWEL, JEWELS, JEWELRY
+  precious jewelry
+  %There is precious jewelry here!
+OBJECT COINS
+  rare coins
+  %There are many coins here!
+#Object first.med.tr
+OBJECT CHEST, BOX, TREASURE
+  treasure chest
+  %The pirate's treasure chest is here!
+# object first.high.tr
+OBJECT EGGS, EGG, NEST
+  golden eggs
+  %[There is a large nest here, full of golden eggs!/
+   The nest of golden eggs has vanished!/
+   Done!]
+OBJECT TRIDENT
+  jeweled trident
+  %There is a jewel-encrusted trident here!
+OBJECT VASE, MING, SHARDS, POTTERY
+  Ming vase
+  %[There is a delicate, precious, Ming vase here!/
+   The vase is now resting, delicately, on a velvet pillow./
+   The floor is littered with worthless shards of pottery./
+   The Ming vase drops with a delicate crash.]
+OBJECT EMERALD
+  egg-sized emerald
+  %There is an emerald here the size of a plover's egg!
+OBJECT PYRAMID
+  platinum pyramid
+  %There is a platinum pyramid here, 8 inches on a side!
+OBJECT PEARL
+  glistening pearl
+  %Off to one side lies a glistening pearl!
+OBJECT RUG, PERSIAN
+  Persian rug
+  %[There is a Persian rug spread out on the floor!/
+   The dragon is sprawled out on a Persian rug!!]
+OBJECT SPICE, SPICES
+  rare spices
+  %There are rare spices here!
+# OBJECT CHAIN
+#   golden chain
+#   %[There is a golden chain lying in a heap on the floor!/
+#    The bear is locked to the wall with a golden chain!/
+#    There is a golden chain locked to the wall!]
+OBJECT CHAIN
+   Golden chain
+  %[The bear is locked to the wall with a golden chain!/
+   There is a golden chain here, lying in a heap on the {FLOOR?}!/
+   There is a golden chain locked to the wall!]
+  &Very expensive. Not a thing you would expect a bear to wear!
+OBJECT CROWN
+  sparkling crown
+  %There is a sparkling crown here!
+OBJECT TUSK, IVORY
+  ivory tusk
+  %A large ivory tusk lies here!
+OBJECT CHALICE, INLAID, UNICORN
+  Inlaid chalice
+  %[A magnificent inlaid chalice lies here!/
+   A unicorn stands here pawing the ground.]
+OBJECT RUBY
+  large ruby
+  %A very large ruby lies here.
+OBJECT ORB, CRYSTAL
+  crystal orb
+  %A crystal orb lies here!
+# object last.treasure
+OBJECT -ORB2, GLOBE
+  %[A glistening globe lies in a small depression on the sloping cellar
+   floor!/
+   ]
+#
+OBJECT CURTAINS  # Curtains in the Soft Room and at Curtain Entrance
+#
+OBJECT MOUSE   # Mouse?  What mouse?
+#
+# OBJECT PACKET, =FERTILISER, =FERTILIZER
+#    [/Paper packet/Packet of fertiliser]
+#   %A [dusty paper /paper /]packet [//of "Stupe-Gro (TM)"
+#    fertiliser ]lies [in one corner/on the {FLOOR?}].
+#   &It is a largish paper packet [lying in the dust on the floor.
+#    There is nothing remarkable about its upper side. To see the
+#    other side, you'd need to pick it up first./containing, by 
+#    the feel of it, some powder. Printed on the packet is a picture
+#    of an aggressively green, leafy plant. Underneath the picture 
+#    are the words
+# 
+#   +       Stupe-Gro (TM)
+#   +       Patent pending
+#   +           Made in Shangri-La]
+
+#
+OBJECT NOTICE
+OBJECT NOTE
+OBJECT LETTERING
+OBJECT GLOW
+# OBJECT FLASK
+#    [/Sealed e/Empty e/E]arthenware flask[/// full of water/ full of oil]
+#   %There is a [sealed earthenware flask sitting in the center of the
+#    pentagram/small, tightly-sealed earthenware flask on the {FLOOR?}
+#    here. It has the words, "London Dry" written on the side/small]
+#    [//, empty / ][//earthenware flask here][///, full of water/, full
+#    of oil/].
+#   &It's a small earthenware flask with traces of red wax rounds its
+#    slim open neck and the words "London Dry" written on the side. It
+#    is[// quite empty./, however, full of ][///water./oil.]
+# OBJECT BUCKET
+#    [/Smelly c/Empty c/C]hampagne bucket[///,][/// full 
+#    of /=/=/=/ 3\/4 / half / with 
+#    some ][///water//champagne/dung/full of water/=/water in it]
+#   %A[/n empty/n empty/] champagne bucket[/// full of /=/=/=/ three
+#    quarters full of / half full of / quarter full of ][///water//sparkling
+#    champagne/unicorn dung/water][//,] is standing on the {FLOOR?}.
+#   &It is what is known as a "champagne bucket", though such objects are in fact
+#    usually used for ice rather than champagne. As is traditional, this
+#    one has a shiny silver surface, but judging by its weight, it
+#    is not even a distant relative to real silver.[/ Remarkably enough,
+#    it has traces of unicorn dung inside, and hence stinks
+#    to high heaven.// It is full of water.// Unusually, but rather 
+#    appropriately, it is full of sparkling champagne./ Rather 
+#    incongruously, it is filled with smelly unicorn dung./ It is three
+#    quarters/ It is half/ It is quarter][/////// full of water.]
+#
+#
+# OBJECT BUST, =OBERON
+#    A [//badly damaged ]marble bust
+#   %A [life-sized/life-sized/broken] marble bust [sits in the far
+#    corner of the shelf/lies on the {FLOOR?}]!
+#   &The [{BUST.INFO}/{BUST.INFO}/marble stallion head is damaged beyond
+#    repair. This makes it pretty worthless, despite the Oberon's sygil
+#    still identifiable on its base].
+#
+# FRAGMENT BUST.INFO
+#    bust depicts a strikingly handsome head of a stallion. However,
+#    the ears are a funny shape - not at all horsey. And indeed, a closer
+#    inspection shows a sygil cut into the front of the pedestal, which
+#    clearly identifies this splendid work of art as the true likeness 
+#    of King Oberon the Fair in his equine manifestation
+#
+#
+# Now for true NPCs...
+#
+OBJECT -DWARF0
+OBJECT -DWARF1
+OBJECT -DWARF2
+OBJECT -DWARF3
+OBJECT -DWARF4
+OBJECT PIRATE
+OBJECT +DWARF, DWARVES
+  %[/
+  /There ][/is /are ][/a threatening/two bloodthirsty/three nasty/
+   four hostile/five threatening][/ little dwar][/f/ves][/ in the
+   room with you!]
+  &[No dwarves here!/
+   The dwarves are an unattractive bunch of short, bearded individuals./
+   Oh for goodness' sake! What a time to indulge your curiosity!
+   Remember what it did to the proverbial cat?]
+#

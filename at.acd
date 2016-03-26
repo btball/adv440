@@ -1,0 +1,6263 @@
+# Copyleft Mike Arnautov 1984-2016.
+#
+# The following acode procedures are associated with
+# individual places.
+#
+#=====================================================================
+#
+#1
+AT road  # checked
+   iflt stage, adventuring
+      set stage, adventuring
+   fin
+   call by.house.actions
+   respond grass, attention.to.detail, grass
+   ifeq status, 1
+      or
+   ifkey door
+      and
+   ifany lock, unlock, close, open
+      quip wellhouse.no.door
+   fin
+   ifkey drink    # In case he said "drink stream"
+      proceed
+   fin
+   ifany door, doorway
+      ifany in, walk
+         set arg1, house
+         set status, 1
+      else
+         respond door, doorway, no.door, in
+      fin
+   fin
+   ifkey dirt
+      call handle.dirt
+   fin
+   ifkey look
+      respond pipe, water.pipes
+      respond path, path.info
+      respond road, road.info
+      respond hill, hill.info
+      respond gully, streambed, its.a.gully
+      respond stream bubbly.stream, south
+      proceed
+   fin
+#    respond pine, tree, fir, no.handy.them, tree
+   ifkey gully
+      ifeq status, 1
+         quip its.a.gully
+      fin
+      quip pardon?
+   fin
+   ifkey cross
+      respond road, no.cross.road
+      call cross
+   fin
+   ifkey in
+      ifany in, house
+         set status, 1
+      otherwise
+      ifgt status, 1
+         respond stream, water, too.little.water
+         quip no.understand
+      fin
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+#       ifeq stage, mirror.world
+#          smove valley, forest.4, something.strange
+#          smove depression, grate, dark.forest, something.strange
+#          smove slit, dark.forest, something.strange
+#          smove hill, building, something.strange
+#          smove ravine, dark.forest, something.strange
+#          smove view, dark.forest, something.strange
+#       fin
+#       ifhave sunstone
+#          ifkey view
+#             ifeq sunstone, 6
+#                say sunstone.stops.you, west
+#                move ravine
+#             fin
+#             lda direction, nw
+#          fin
+#          ifany road, up, hill
+#             lda direction, west
+#          otherwise
+#          ifany enter, building
+#             lda direction, east
+#          otherwise
+#          ifany downstream, gully, stream, down, valley, depression
+#             lda direction, south
+#          otherwise
+#          ifany path
+#             lda direction, nw
+#          fin
+#          call consult.sunstone, direction
+#       fin
+      move enter, east, inward, building, building
+      move road, west, up, upward, hill, hill
+      move downstream, stream, gully, south, down, valley, valley
+      move depression, grate, depression
+      move slit, slit
+#       move ravine, ravine
+#       move view, stupendous.view
+#       move north, forest.4
+#       move ne, north.of.building
+#       move se, south.of.building
+#       move sw, forest.14
+#       move nw, path, path
+      respond pipe, upstream, pipe.too.narrow, 1
+   fin
+   ifany pipe, wall, streambed
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#2
+AT hill   # checked
+#    call in.forest.actions
+   respond grass, attention.to.detail, grass
+   ifany tower, mountain, thicket, haze
+      ifkey look
+         respond tower, too.far.to.see, tower
+         respond mountain, distant.mountains
+         respond thicket, is.thicket
+         respond haze, far.haze
+      fin
+      ifany thicket, tower
+         ifgt status, 1
+            and
+            not
+         ifkey go
+            quip no.understand
+         fin
+      else
+         quip pardon?
+      fin
+   fin
+   ifkey dirt
+      call handle.dirt
+   fin
+   ifkey dirt
+      call handle.dirt
+   fin
+   ifkey look
+#       ifany road
+#          quip its.just.a, track
+#       fin
+      respond hill, hill.info
+      respond building, too.far.to.see, building
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+#       ifany road
+#          call follow.it, west, road, east
+#       otherwise
+#       ifkey forest
+#          chance 50
+#             lda direction, ne
+#          else
+#             lda direction, south
+#          fin
+#          set arg1, direction
+#       fin
+#       ifeq stage, mirror.world
+#          smove building, road, something.strange
+#          smove valley, forest.2, something.strange
+#          smove tower, north.of.building, something.strange
+#       fin
+#       ifhave sunstone
+#          ifkey tower
+#             ifeq sunstone, 4
+#                or
+#             ifeq sunstone, 5
+#                say sunstone.stops.you, sw
+#                move track
+#             fin
+#          fin
+#       fin
+#          ifany road, down, building
+#             lda direction, east
+#          otherwise
+#          ifany tower
+#             lda direction, west
+#          otherwise
+#          ifkey path
+#             lda direction, north
+#          otherwise
+#          ifkey valley
+#             lda direction, se
+#          fin
+#          call consult.sunstone, direction
+#       fin
+      move road, building, forward, down, east, north, road
+      move forest, south, forest.1 
+   fin
+#       move north, path, path
+#       move ne, forest, forest.4
+#       move se, valley, valley
+#       move south, forest.14
+#       move sw, dark.forest
+#       move nw, forest.2
+#       move west, track
+#       move thicket, dark.forest
+#       ifkey tower
+#          ifhave bust
+#             move garden.s
+#          else
+#             move outside.gates
+#       fin
+#    fin
+#
+#=====================================================================
+#
+#3
+AT building  # checked
+   call house.inventory, 0       # Check the treasure collection
+   ifkey go
+   else
+      respond door, doorway, no.door, out
+   fin
+   ifkey spring
+      ifkey drink
+         call drink
+      fin
+      quip spring.is.water
+   fin
+   respond well, wellhouse.you.dummy
+   ifeq status, 1
+      or
+   ifkey door
+      and
+   ifany lock, unlock, close, open
+      quip wellhouse.no.door
+   fin
+#    call default.read, poster
+   ifany note, notice, words, message, words
+      ifany read, look
+         call look
+      fin
+      ifgt status, 1
+         quip leave.poster.alone
+      fin
+   fin
+   ifkey roof
+      fakecom roof, ceiling
+   fin
+   ifany bricks, wall, ceiling
+      ifkey look
+         respond bricks, house.bricks
+         respond wall, building.wall
+         proceed
+      fin
+      respond bricks, wall, house.bricks
+      flag context, arg2.here
+      proceed
+   fin
+   ifkey look
+      respond roof, house.ceiling 
+      respond corner, wall.corners, 1
+      respond pipe, water.pipes
+      respond stream, stream.flows.out
+      respond building, house.info
+      respond out, doorway, too.bright.outside
+      proceed
+   fin
+   ifany drop, throw
+      ifeq status, 1
+         default inhand
+      fin
+      ifkey tusk
+         and
+         not
+      ifflag tusk, valued
+         drop tusk
+         flag tusk, valued
+         set tusk, 1
+         quip tusk.quip, arg2
+      fin
+#       ifkey rug
+#          and 
+#       ifhave rug
+#          and
+#          not
+#       ifflag rug, valued
+#          drop rug
+#          quip must.value.rug, arg2
+#       fin
+   fin
+#    ifeq stage, mirror.world
+#       respond out, east, road, wall.there
+#    fin
+#    ifany road, out, west
+#       call try.dir, west, road
+#    fin
+   move enter, out, outdoor, west, road
+   ifkey go, building
+      quip already.inside, building
+   fin
+   ifany in
+      ifkey building
+         or
+      ifeq status, 1
+         quip already.inside, building
+      fin
+   fin
+   ifany xyzzy, plugh
+      and
+   iflt  stage, exits.barred      # Is the cave open?
+      set cave.entered, 1
+      smove xyzzy, debris, foof
+      smove plugh, y2, foof
+   fin
+   ifkey stream, drink
+      call drink
+   fin
+   respond pipe, stream, downstream, pipe.too.narrow, 0
+   ifany note, notice, message, words, corner, streambed, wall
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#4
+AT valley  # checked
+#    call in.valley.actions
+   ifkey look
+      respond stream, its.tears.are.wet, stream
+      ifkey valley
+         set status, 1
+      fin
+      proceed
+   fin
+   ifkey drink    # Cater for "drink stream"
+      call drink
+   fin
+   ifany in, go
+      and
+   ifkey water
+      or
+   ifkey in, stream
+      quip too.little.water
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      ifkey stream
+         call follow.it, road, north, slit, south
+      otherwise
+      ifany up, forest
+         chance 50
+            lda arg1, west
+         else
+            lda arg1, east
+         fin
+#          ifhave sunstone
+#             set direction, arg1
+#          fin
+      fin
+#       ifeq stage, mirror.world
+#          smove  road, building, slit, something.strange
+#          smove  slit, road, something.strange
+#          smove  depression, forest.4, something.strange
+#       fin
+#       ifhave sunstone
+#          ifany upstream, road, building
+#             lda direction, north
+#          otherwise
+#          ifany down, downstream, slit, depression
+#             lda direction, south
+#          fin
+#          ifkey forest
+#             lda direction, west
+#          fin
+#          call consult.sunstone, direction
+#       fin
+      move upstream, north, road, building, road
+      move forest, east, west, upward, forest.1
+      move depression, depression
+      move nw, hill
+#       move east, south.of.building
+#       move se, forest.18
+#       move sw, forest.15
+#       move west, forest.14
+      move south, down, downstream, slit
+#       ifkey ne
+#          chance 50
+#             move road
+#          fin
+# #          move south.of.building
+#       fin
+   fin
+   ifkey streambed
+      flag context, arg2.here
+   fin
+#=====================================================================
+#
+#5
+AT slit  # checked 
+   ifkey look
+      respond streambed, shallow.streambed
+      respond stream, its.tears.are.wet, stream
+      respond slit, look.slit
+      respond valley, green.valley, 0
+      proceed
+   fin
+   ifany in, go
+      and
+   ifkey water
+      or
+   ifkey in, stream
+      quip too.little.water
+   fin
+   ifkey slit
+      and
+   ifany down, in
+      set status, 1
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      ifkey up
+         chance 50
+            lda arg1, west
+         else
+            lda arg1, east
+         fin
+#          ifhave sunstone
+#             set direction, arg1
+#          fin
+      otherwise
+      ifkey stream
+         and
+      ifeq stage, adventuring
+         lda arg1, north
+#          ifhave sunstone
+#             set direction, arg1
+#          fin
+      otherwise
+      ifkey rock
+         lda arg1, south
+#          ifhave sunstone
+#             set direction, arg1
+#          fin
+      fin
+#       ifeq stage, mirror.world
+#          smove  road, end.of.valley, something.strange
+#          smove  depression, valley, something.strange
+#          smove  valley, depression, something.strange
+#       fin
+#       ifhave sunstone
+#          ifany downstream, bed, depression
+#             lda direction, south
+#          otherwise
+#          ifany valley, upstream, building
+#             lda direction, north
+#          fin
+#          call consult.sunstone, direction
+#       fin
+      move building, road, road
+      move upstream, north, valley, valley
+      move downstream, bed, south, depression, depression
+      move forest, east, west, forest.1
+#       move ne, south.of.building
+#       move east, forest.18
+#       move se, forest.19
+#       move sw, forest.16
+#       move west, forest, forest.15
+#       move nw, forest.14
+      ifany slit, stream, down, enter
+         ifeq slit,0
+            quip slit.too.narrow
+         fin
+         say down.the.slit
+#          goto wrong.venue
+         unflag status, moved
+         quit
+      fin
+   fin
+   ifkey streambed
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#6
+AT depression # checked
+   respond grass, attention.to.detail, grass
+   ifkey look
+      respond streambed, dry.streambed
+      respond dirt, ground, its.dirt
+      respond depression, look.depression
+      respond concrete, crumbly.concrete
+      respond rock, bed, no.look.rock
+      respond down, in, dark.there, down
+      proceed
+   fin
+   ifkey concrete
+      respond break, not.a.hope
+      ifany dig, dynamite
+         proceed
+      fin
+      flag context, arg2.here
+      proceed
+   fin
+   ifany bed, rock
+      ifkey dig
+         proceed
+      fin
+      ifkey bed
+         and
+      ifeq status, 1
+      else
+         quip no.understand
+      fin
+   fin
+   ifkey dirt
+      call handle.dirt
+   fin
+   ifkey grate
+      and
+   ifany go, in, down
+      set status, 1
+      fakearg go, in
+   fin
+   respond stream, downstream, i.dont.see, stream
+#    ifkey go
+#       or
+#    ifeq status, 1
+#       ifkey up
+#          chance 50
+#             lda arg1, east
+#          else
+#             lda arg1, west
+#          fin
+#       fin
+#       ifeq stage, mirror.world
+#          smove road, end.of.valley, something.strange
+#          smove valley, end.of.valley, something.strange
+#          smove slit, end.of.valley, something.strange
+#       fin
+#       ifhave sunstone
+#          ifany bed, stream, upstream, slit, valley, building
+#             lda direction, north
+#          fin
+#          call consult.sunstone, direction
+#       fin
+#       move ne, forest.18
+#       move east, forest.19
+#       move se, forest.20
+#       move south, end.of.valley
+#       move sw, forest.17
+#       move west, forest, forest.16
+#       move nw, forest.15
+      move north, stream, upstream, gully, slit, slit
+#       move valley, valley
+      move road, building, road
+      move forest, east, west, south, forest.1
+      ifany enter, in, inward, down
+         ifeq grate, unlocked
+            set cave.entered, 1
+            move in.cave
+         fin
+         quip cant.pass.grate
+      fin
+#    fin
+   ifkey streambed
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#7
+AT in.cave  # checked
+   ifkey go, grate
+      fakearg go, out
+   fin
+   ifkey crawl
+      and
+   ifany in, out
+      set status, 1
+   fin
+   ifkey out, grate
+      set status, 1
+   fin
+   ifkey look
+      respond crawl, low.crawl
+      respond cobbles, just.them, cobbles
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      ifany up, out, leave, surface
+         ifeq grate, unlocked
+            move depression
+         fin
+         quip cant.pass.grate
+      fin
+      move crawl, cobbles, in, west, cobbles
+      move pit, pit
+#       move out, debris, debris
+   fin
+   ifany crawl, cobbles
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#8
+AT cobbles # checked
+   ifkey look
+      respond cobbles, just.them, cobbles
+      respond light, looks.like.daylight
+      respond passage, tunnel, corridor, is.passage, 0
+      proceed
+   fin
+   ifkey go, light
+      move in.cave
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      ifany passage, crawl
+         call follow.it in.cave, east, debris, west
+      fin
+      move out, surface, entrance, east, in.cave
+      move inward, dark, west, debris, debris
+      move pit, pit
+   fin
+   ifany cobbles, crawl
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#9
+AT debris # checked
+#    checkpoint   # debug - btb
+   call default.read, note
+   ifany note, notice, words, inscription, message
+      respond get, pull, leave.it.alone, note
+      respond look, read, debris.note
+   fin
+   ifkey look
+      respond debris, no.future.in.it, arg2
+      respond passage, tunnel, corridor, is.passage, 0
+      respond canyon, is.canyon, 0
+      proceed
+   fin
+   move entrance, in.cave
+   move out, crawl, cobble, cobbles, passage, low, east, cobbles
+   move canyon, inward, up, west, canyon
+   move xyzzy, building
+   move pit, pit
+   ifeq grate, unlocked
+      move depression, depression
+   else
+      smove depression, in.cave, cant.pass.grate
+   fin
+#       ifkey xyzzy
+#          ifgt stage, closing.soon
+#             or
+#          ifflag admin, nomagic
+#             flag admin, panicked
+#             quip exit.closed
+#          fin
+#          smove building, foof
+#       fin
+#    fin
+#    ifany note, notice, words, message, inscription
+#       flag context, arg2.here
+#    fin
+#
+#=====================================================================
+#
+#10
+AT canyon  # checked
+   ifkey look, canyon
+      set status, 1
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move entrance, in.cave
+      move down, out, east, debris, debris
+      move inward, up, west, bird.chamber
+      move pit, pit
+      ifkey canyon
+         call follow.it, debris, east, bird.chamber, west
+      fin
+      ifeq grate, unlocked
+         move depression, depression
+      else
+         smove depression, in.cave, cant.pass.grate
+      fin
+   fin
+   ifany canyon
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#11
+AT bird.chamber   # checked
+   ifkey look
+      ifkey chamber
+         set status, 1
+      fin
+      respond canyon, is.canyon, 1
+      respond passage, tunnel, corridor, is.passage, 1
+      respond walls, stone, orange.walls
+      respond formations, flow, stone.rivers
+      proceed
+   fin
+   ifhere bird
+      flag here, hintable
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move entrance, in.cave
+      move debris, debris
+      move out, canyon, east, canyon
+      move in, passage, pit, west, pit
+      ifeq grate, unlocked
+         move depression, depression
+      else
+         smove depression, in.cave, cant.pass.grate
+      fin
+   fin
+   ifany chamber, canyon, passage, walls, stone
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#12
+AT pit  # checked - but needs testing ! btb
+   ifeq nugget.room, 0
+      and
+      not
+   ifhave nugget
+      apport steps, pit
+   else
+      apport steps, limbo
+   fin
+   ifkey look
+      respond west, crack, crack.info
+      respond wall, cracked.wall, west
+      respond down, pit, no.see.down.there, 1
+      ifkey steps
+         and
+      ifhere steps
+         quip dome.steps
+      fin
+      proceed
+   fin
+   ifkey go, on
+      quip crack.too.small
+   fin
+   ifkey down
+      and
+   ifany steps, pit, climb
+      or
+   ifkey in, crack
+      set status, 1
+   fin
+   ifany go, jump
+      or
+   ifeq status, 1
+      move entrance, in.cave
+      move debris, debris
+      move passage, east, bird.chamber
+      ifeq grate, unlocked
+         move depression, depression
+      else
+         smove depression, in.cave, cant.pass.grate
+      fin
+      respond west, crack, crack.too.small
+      ifany down, pit, steps
+         ifhere steps
+            move mists
+         fin
+         say broken.neck
+         goto mists
+         call coroner
+      fin
+      ifkey jump
+         goto mists
+         call splatter
+      fin
+   fin
+   ifany crack, pit, steps
+      flag context, arg2.here
+   fin
+   lda throw.here, mists
+   lda throw.text, throw.pit
+#
+#=====================================================================
+#
+#13
+AT mists  # checked
+   ifeq stage, closing.soon
+      call closing.time
+   fin
+   apport steps, limbo
+   ifkey look
+      ifkey hall
+         set status, 1
+      fin
+#       ifkey dome
+#          say dome.state
+#          quip blank
+#       fin
+      ifkey steps
+         and
+      ifeq mists, steps.present
+         quip dome.steps
+      fin
+      respond crack, passage, dark.exit, arg2
+#       respond staircase, mists.stairs
+      respond wall, cracked.wall, east
+      proceed
+   fin
+   ifany climb, up
+      and
+   ifany pit, dome, passage, steps
+      set status, 1
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move south, passage, nugget.room
+#       move east, crack, sandstone
+      move forward, hall, west, east.of.fissure
+      move down, north, mtking
+      move y2, jumble
+      ifany climb, up, pit, dome, steps
+         ifeq mists, steps.present
+            move pit
+         fin
+         quip dome.unclimbable
+      fin
+   fin
+   ifany passage, tunnel, corridor, crack, steps
+      flag context, arg2.here
+   fin
+   set throw.it, true
+   lda throw.text, up.the.dome
+   lda throw.here, pit
+#
+#=====================================================================
+#
+#14
+AT east.of.fissure  # checked - might need a test drive - btb
+   ifany bridge, arch
+      ifeq fissure, 1
+         apport bridge, here
+      else
+         quip i.dont.see, bridge
+      fin
+   fin
+   ifkey look
+      respond down, bank, no.see.down.there, 1
+      ifany bridge, arch
+         call look.bridge
+      fin
+      ifkey hall
+         set status, 1
+      fin
+      proceed
+   fin
+   ifkey jump
+      ifeq status, 1
+         or
+      ifany across, fissure, down
+         ifeq fissure, 1
+            quip try.the.bridge
+         fin
+         goto cavern
+         call splatter
+      fin
+      proceed
+   fin
+   lda throw.here, cavern
+   lda throw.text, throw.fissure
+   ifkey cross
+      and
+   ifany bridge, arch, fissure
+      set status, 1
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move east, hall, mists
+      ifany over, forward, cross, bridge, arch, west
+         ifeq fissure, 0
+            quip no.way.across
+         fin
+         smove west.of.fissure, it.plays.a.tune
+      fin
+      respond bank, you.are.there
+   fin
+   ifany fissure, mist, hall, bank
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#15
+AT nugget.room  # checked
+   call default.read, note
+   ifany note, notice, words, inscription, message
+      respond look, read, nugget.room.note, nugget.room
+      flag context, arg2.here
+      proceed
+   fin
+   ifkey look
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move north, out, hall, mists
+   fin
+   ifany note, notice, words, inscription, message
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#16
+AT mtking  # checked  --- I believe this is essentially what's in 440! 
+# It could bear more examination ! - btb
+   ifkey look
+      ifkey hall
+         set status, 1
+      fin
+      respond passage, tunnel, corridor, dark.exits, passage
+      proceed
+   fin
+   set place.ptr, 0
+   ifkey steps
+      and
+   ifany up, climb
+      set status, 1
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      ifany steps, up, east
+         lda place.ptr, mists
+      fin
+      respond passage, tunnel, corridor, too.many.exits, passage
+      ifkey north
+         lda place.ptr, low.n/s.passage
+      otherwise
+      ifkey sw
+         chance 66
+            lda place.ptr, secret.e/w.canyon
+         else
+            ifnear snake, 0
+               quip sleepy.blocks.way, sw
+            fin
+            ifnear snake, 1
+               ifis snake.exit, secret.e/w.canyon
+                  set place.ptr, snake.exit
+               else
+                  quip snake.blocks.way
+               fin
+            else
+               flag status, moved
+               quip still.where.you.were
+            fin
+         fin
+      otherwise
+      ifkey secret
+         lda place.ptr, secret.e/w.canyon
+      otherwise
+      ifkey south
+         lda place.ptr, south.side.chamber
+      otherwise
+      ifkey west
+         lda place.ptr, west.side.chamber
+      otherwise
+      ifkey down
+         lda place.ptr, vault
+#       otherwise
+#       ifkey se
+#          lda place.ptr, morion
+#       otherwise
+#       ifkey nw
+#          lda place.ptr, division.in.passage
+#       otherwise
+#       ifkey ne
+#          lda place.ptr, wide.n/s.corridor
+      fin
+      ifeq place.ptr, 0
+         proceed
+      fin
+      ifnear snake
+         and
+         not
+      ifeq place.ptr, snake.exit
+         call sneaks.die
+         ifeq snake, 0                 # If snake sleepy 
+            ifany ne, se, south, nw    # Dead end directions
+               ifinrange arg1, first.direction, last.direction
+                  quip sleepy.blocks.way, arg1
+               else
+                  quip sleepy.blocks.way, arg2
+               fin
+            else
+               set snake, 1            # Wake it up
+               say snake.misses, snake
+            fin
+         else
+            quip snake.blocks.way
+         fin
+      fin
+      move place.ptr
+   fin
+   ifany passage, tunnel, corridor, steps, hall
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#17
+AT west.pit.end  # checked
+   ifkey look
+      respond down, pit, pit.view, plant
+      respond hole, its.a.hole
+      ifgt plant, 1
+         respond plant, its.a.plant, plant
+      fin
+      proceed
+   fin
+   ifkey hole
+      ifany go, enter, climb
+         ifeq plant, gigantic
+            lda  arg1, climb
+         else
+            quip too.far.up, hole
+         fin
+      else
+         flag context, arg2.here
+         proceed
+      fin
+   fin
+   ifkey climb
+      ifeq status, 1
+         or
+      ifany up, hole
+         ifeq  plant, gigantic
+            set nobody.answers, 0
+            smove narrow.corridor, up.the.plant.you.go
+         fin
+         quip too.far.up, hole
+      otherwise
+      ifkey plant
+         ifeq plant, stunted
+            respond plant, i.dont.see, arg2
+         otherwise
+         ifeq plant, grown
+            smove west.pit, down.the.plant.you.go
+         else
+            set nobody.answers, 0
+            smove narrow.corridor, up.the.plant.you.go
+         fin
+      fin
+      respond wall, too.far.up, hole         
+   fin
+   ifkey down, pit
+      set status, 1
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move east, across, cross, east.pit.end
+      move west, slab, slab
+      move down, pit, west.pit
+   fin
+   ifkey plant
+      and
+   ifgt plant, 1
+      flag context, arg2.here
+   fin
+   lda throw.here, west.pit
+   lda throw.text, throw.pit
+#
+#=====================================================================
+#
+#18
+AT east.pit # checked
+   ifkey look
+      respond pool, oil, corner, looks.greasy
+      ifkey pit
+         set status, 1
+      fin
+      proceed
+   fin
+   ifkey climb
+      ifany up, out, wall, pit
+         set status, 1
+      fin
+   fin
+   ifany go, pit
+      or
+   ifeq status, 1
+      respond pit, you.are.there
+      move climb, up, out, east.pit.end
+   fin
+#
+#=====================================================================
+#
+#19
+AT west.pit  # checked
+   ifkey look
+      respond hole, its.a.hole
+      proceed
+   fin
+   ifkey hole
+      ifany up, go, in
+         lda arg1, climb
+      otherwise
+      ifkey climb
+         or
+      ifeq status, 1
+      else
+         flag context, arg2.here
+         proceed
+      fin
+   fin
+   ifany go, pit
+      or
+   ifeq status, 1
+      move up, out, west.pit.end
+   fin
+   ifkey climb
+      ifkey hole
+         or
+      ifeq status, 1
+         iflt plant, gigantic
+            quip too.far.up, hole
+         fin
+         lda arg2, plant
+      fin
+      move upward, wall, pit, out, west.pit.end
+      ifkey plant
+         ifeq plant, stunted
+            quip plant.not.climbable
+         fin
+         ifeq plant, grown
+            smove west.pit.end, plant.too.short
+         fin
+         set nobody.answers, 0
+         smove narrow.corridor, up.the.plant.you.go
+      else
+         quip hah!
+      fin
+   fin
+   set vessel, none
+   ifany pour, spill
+      ifeq status, 1
+         set vessel, none
+         call find.water, false
+         ifgt vessel, none
+            call water.beanstalk
+         fin
+      fin
+      ifkey water
+        call water.beanstalk
+      fin
+   fin
+   ifkey water, beanstalk
+        call water.beanstalk
+   fin
+   ifany empty, pour
+#       ifkey bucket
+#          and
+# #       ifnear bucket, full.of.dung
+# #          call feed.beanstalk
+# #       fin
+      ifany bottle
+         and
+      ifnear arg2
+         set vessel, arg2
+         eval object.state, vessel
+         ifeq object.state, full.of.water
+            call water.beanstalk
+         fin
+      fin
+   fin
+   ifkey plant
+      ifkey water
+         call water.beanstalk
+      fin
+#       respond feed, fertiliser, plant.not.hungry
+      respond get, pull, roots.too.deep, plant
+   fin
+#    ifkey packet
+#       and
+#    ifany open, tear, spill, scatter
+#       ifnear packet
+#          quip plant.not.hungry
+#       fin
+#       call bail.out
+#    fin
+   ifkey foliage
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#20
+AT west.of.fissure # checked
+   ifany bridge, arch
+      ifeq fissure, 1
+         apport bridge, here
+      else
+         quip i.dont.see, bridge
+      fin
+   fin
+   ifkey look
+      respond down, bank, no.see.down.there, 1
+      respond mist, this.is.mist
+      ifany bridge, arch
+         call look.bridge
+      fin
+      ifkey hall
+         set status, 1
+      fin
+      proceed
+   fin
+   ifkey jump
+      ifeq status, 1
+         or
+      ifany across, fissure, down
+         ifeq fissure, 1
+            quip try.the.bridge
+         fin
+         goto cavern
+         call splatter
+      fin
+      proceed
+   fin
+   lda throw.here, cavern
+   lda throw.text, throw.fissure
+   ifkey cross
+      and
+   ifany bridge, fissure, arch
+      set status, 1
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move west, west.end.of.mists
+      ifkey jump
+         ifeq fissure, 1
+            quip try.the.bridge
+         fin
+         goto cavern
+         call splatter
+      fin
+#       ifkey north
+#          smove west.end.of.mists, crawled.back.to.mists
+#       fin
+      respond north, still.where.you.were
+      ifkey hall
+         ifis there, east.of.fissure
+            lda arg2, east
+         else
+            lda arg2, west
+         fin
+      fin
+      ifany over, cross, bridge, arch, east
+         ifeq fissure, 0
+            quip no.way.across
+         fin
+         smove east.of.fissure, it.plays.a.tune
+      fin
+      respond bank, you.are.there
+   fin
+   ifany fissure, mist, hall, bank
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#21
+AT low.n/s.passage  # checked
+   ifeq stage, closing.soon
+      call closing.time
+   fin
+   ifkey look
+      respond hole, no.see.down.there, 0
+      respond passage, tunnel, corridor, dark.exits, passage
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move south, out, hall, mtking
+      move north, y2, y2
+      move down, hole, dirty
+      move hole, dirty
+      ifany tunnel, passage, corridor
+         call follow.it, y2, north, mtking, south
+      fin
+   fin
+   lda throw.here, dirty
+   lda throw.text, throw.hole
+   ifany passage, tunnel, corridor, hole
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#22
+AT south.side.chamber  # checked
+   ifkey look
+      respond shaft, dark.way, shaft
+#       ifany steps
+#          say spiral.stair
+#          quip blank
+#       fin
+      ifkey chamber
+         set status, 1
+      fin
+      proceed
+   fin
+   ifany down, steps
+      set status, 1
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move north, out, hall, mtking
+      move down, steps, shaft, half.stairs
+      respond chamber, you.are.there
+   fin
+   ifany steps, chamber
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#23
+AT west.side.chamber  # checked
+   ifkey look
+      ifkey chamber
+         set status, 1
+      fin
+      respond passage, tunnel, corridor, dark.exit, passage
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move east, out, hall, mtking
+      move west, up, passage, crossover
+      respond chamber, you.are.there
+   fin
+   ifany chamber, passage
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#24
+AT y2  # checked
+   unflag east.window, no.dwarf
+   ifkey look
+      respond passage, tunnel, corridor, dark.exits, passage
+      respond wall, jumble, all.broken.up
+      respond y2, rock, surveyors.mark
+      proceed
+   fin
+   ifany plugh, plover
+      ifeq status, 2
+         and
+         not
+      ifkey say
+         proceed
+      fin
+      ifkey plover
+         unflag plover, hintable
+         unflag alcove, hintable
+         unflag dark, hintable
+         move plover
+      fin
+      ifgt stage, closing.soon
+         or
+      ifflag admin, nomagic
+         flag admin, panicked
+         quip exit.closed
+      fin
+      smove building, foof
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move south, low.n/s.passage
+      move east, wall, broken, jumble, jumble
+      move west, east.window
+      ifany tunnel, passage, corridor
+         call follow.it, east.window, west, low.n/s.passage, east
+      fin
+   fin
+   ifany passage, tunnel, corridor, jumble, wall, rock, y2
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#25
+AT jumble  # checked
+   ifkey look
+      ifkey jumble
+         set status, 1
+      fin
+      respond crack, large.n.small
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move down, y2, y2
+      move up, upward, mists
+      respond n, ne, e, se, s, sw, w, nw, lost.in.jumble
+   fin
+   ifany crack, jumble
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#26
+AT east.window # checked
+   ifeq stage, closing.soon
+      call closing.time
+   fin
+   call fake.window
+   ifkey look
+      respond me, its.you
+      respond pit, huge.pit
+      respond mist, this.is.mist
+      respond marks, dust, cant.tell
+      respond floor, misty.floor
+      respond passage, tunnel, corridor, dark.exit, passage
+      proceed
+   fin
+   ifkey climb
+      and
+   ifany down, pit
+      quip climbing.out.risky
+   fin
+   ifany go, jump
+      and
+   ifany pit, window
+      say broken.neck
+      goto mirror.canyon
+      call coroner
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move east, passage, tunnel, corridor, y2, y2
+      move reflect, west.window
+   fin
+   ifany pit, mist, marks, dust, passage, tunnel, corridor
+      flag context, arg2.here
+   fin
+   lda throw.here, mirror.canyon
+   lda throw.text, throw.pit
+#
+#=====================================================================
+#
+#27
+AT dirty # checked
+   ifkey look
+      respond crawl, passage, dark.exit, arg2
+      respond up, hole, no.see.up.there
+      respond dirt, dirty.place
+      proceed
+   fin
+   ifkey up, hole
+      set status, 1
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move east, crawl, brink
+      move up, upward, hole, low.n/s.passage
+      move west, passage, dusty
+      move bedquilt, bedquilt
+   fin
+   ifany crawl, passage, hole, dirt
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#28
+AT brink   # checked
+   ifkey look
+      ifkey brink
+         set status, 1
+      fin
+      respond down, pit, stream.in.pit
+      respond crawl, dark.exit, crawl
+      proceed
+   fin
+   ifkey climb
+      and
+   ifany pit, down
+      set status, 1
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move west, crawl, dirty
+      move down, climb, pit, streampit
+   fin
+   ifany brink, pit, crawl
+      flag context, arg2.here
+   fin
+   lda throw.here, streampit
+   lda throw.text, throw.pit
+#
+#=====================================================================
+#
+#29
+AT streampit   # checked
+   respond slit, slits, slits.too.narrow
+   ifkey drink, stream
+      proceed
+   fin
+   ifkey look
+      respond stream, its.tears.are.wet, stream
+      proceed
+   fin
+   ifany cross, stream, climb, out
+      set status, 1
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move up, out, climb, brink
+      respond stream, down, upstream, downstream, slits.too.narrow
+      respond cross, stream, stream.crossed
+   fin
+#
+#=====================================================================
+#
+#30
+AT dusty  # checked
+   ifkey look
+      respond passage, tunnel, corridor dark.exit, passage
+      respond hole, no.see.down.there, 0
+      respond dust, rock, dusty.place
+      respond crack, useless.cracks
+      proceed
+   fin
+   ifkey down, hole
+      or
+   ifkey go
+      or
+   ifeq status, 1
+      move east, passage, dirty
+      move down, hole, floor, complex
+      move bedquilt, bedquilt
+      respond crack, useless.cracks
+   fin
+   ifany dust, rock, hole, passage, crack
+      flag context, arg2.here
+   fin
+   lda throw.here, complex
+   lda throw.text, throw.hole
+#
+#=====================================================================
+#
+#31
+AT west.end.of.mists  # checked
+   ifkey look
+      ifkey hall
+         set status, 1
+      fin
+      respond crawl, passage, dark.exit, arg2
+      proceed
+   fin
+   ifkey climb, up
+      or
+   ifkey go
+      or
+   ifeq status, 1
+      move south, up, passage, climb, mazea.42
+      move east, west.of.fissure
+      move west, crawl, hall, long.hall.east
+      respond north, still.where.you.were.2
+   fin
+   ifany hall, passage, crawl
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#32
+AT mazea.42  # checked
+   ifkey go
+      or
+   ifeq status, 1
+      move up, west.end.of.mists
+      move north, mazea.42
+      move east, mazea.43
+      move south, mazea.45
+      move west, mazea.80
+   fin
+#
+#=====================================================================
+#
+#33
+AT mazea.43  # checked
+   ifkey go
+      or
+   ifeq status, 1
+      move west, mazea.42
+      move south, mazea.44
+      move east, mazea.45
+   fin
+#
+#=====================================================================
+#
+#34
+AT mazea.44  # checked
+   ifkey go
+      or
+   ifeq status, 1
+      move east, mazea.43
+      move down, mazea.48
+      move south, mazea.50
+      move north, mazea.82
+   fin
+#
+#=====================================================================
+#
+#35
+AT mazea.45  # checked
+   ifkey go
+      or
+   ifeq status, 1
+      move west, mazea.42
+      move north, mazea.43
+      move east, mazea.46
+      move south, mazea.47
+      move up, down, mazea.87
+      move down, mazea.87
+   fin
+#
+#=====================================================================
+#
+#36
+AT mazea.46 # checked
+   ifkey go
+      or
+   ifeq status, 1
+      move out, west, mazea.45
+   fin
+#
+#=====================================================================
+#
+#37
+AT mazea.47 # checked
+   ifkey go
+      or
+   ifeq status, 1
+      move out, east, mazea.45
+   fin
+#
+#=====================================================================
+#
+#38
+AT mazea.48  # checked
+   ifkey go
+      or
+   ifeq status, 1
+      move out, up, mazea.44
+   fin
+#
+#=====================================================================
+#
+#39
+AT mazea.49  # checked
+   ifkey go
+      or
+   ifeq status, 1
+      move east, mazea.50
+      move west, mazea.51
+   fin
+#
+#=====================================================================
+#
+#40
+AT mazea.50  # checked
+   ifkey go
+      or
+   ifeq status, 1
+      move east, mazea.44
+      move west, mazea.49
+      move down, mazea.51
+      move south, mazea.52
+   fin
+#
+#=====================================================================
+#
+#41  # checked
+AT mazea.51
+   ifkey go
+      or
+   ifeq status, 1
+      move west, mazea.49
+      move up, mazea.50
+      move east, mazea.52
+      move south, mazea.53
+   fin
+#
+#=====================================================================
+#
+#42
+AT mazea.52 # checked
+   ifkey go
+      or
+   ifeq status, 1
+      move west, mazea.50
+      move east, mazea.51
+      move south, mazea.52
+      move up, mazea.53
+      move north, mazea.55
+      move down, mazea.86
+   fin
+#
+#=====================================================================
+#
+#43
+AT mazea.53  # checkedß
+   ifkey go
+      or
+   ifeq status, 1
+      move west, mazea.51
+      move north, mazea.52
+      move south, mazea.54
+   fin
+#
+#=====================================================================
+#
+#44
+AT mazea.54  # checked
+   ifkey go
+      or
+   ifeq status, 1
+      move out, west, mazea.53
+   fin
+#
+#=====================================================================
+#
+#45
+AT mazea.55 # checked
+   ifkey go
+      or
+   ifeq status, 1
+      move west, mazea.52
+      move north, mazea.55
+      move down, mazea.56
+      move east, mazea.by.pit
+   fin
+#
+#=====================================================================
+#
+#46
+AT mazea.56  # checked
+   ifkey go
+      or
+   ifeq status, 1
+      move out, up, mazea.55
+   fin
+#
+#=====================================================================
+#
+#47
+AT mazea.by.pit  # checked
+   ifkey look
+      respond down, pit, no.see.down.there, 0
+      respond column, stalactite, wall, orange.column
+      respond brink, orange.brink
+      proceed
+   fin
+   ifany climb, down
+      and
+   ifany column, stalactite
+      or
+   ifkey go
+      or
+   ifeq status, 1
+      move down, climb, bird.chamber
+      move west, mazea.55
+      move south, mazea.58
+      move north, mazea.83
+      move east, mazea.84
+   fin
+   respond column, hah!
+   ifany column, stalactite, wall, brink
+      flag context, arg2.here
+   fin
+   lda throw.here, bird.chamber
+   lda throw.text, throw.pit
+#
+#=====================================================================
+#
+#48
+AT mazea.58 # checked
+   ifkey go
+      or
+   ifeq status, 1
+      move out, east, mazea.by.pit
+   fin
+#
+#=====================================================================
+#
+#49
+AT long.hall.east # checked
+   ifkey look
+      ifkey hall
+         set status, 1
+      fin
+      respond crawl, hole, dark.exit, arg2
+      proceed
+   fin
+   ifkey crawl, up
+      set status, 1
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move east, up, upward, crawl, west.end.of.mists
+      move west, hall, long.hall.west
+      move north, down, hole, crossover
+   fin
+   ifany hall, crawl, hole
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#50
+AT long.hall.west  # checked
+   ifkey look
+      ifkey hall
+         set status, 1
+      fin
+      respond passage, tunnel, corridor, ns.passage
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move east, hall, long.hall.east
+      move north, crossover
+      move south, mazed.107
+      respond passage, tunnel, corridor, need.a.direction
+   fin
+   ifany passage, tunnel, corridor
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#51
+AT crossover # checked
+   ifkey look
+      respond passage, tunnel, corridor, dark.exits, passage
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move west, long.hall.east
+      move north, dead.end.1
+      move east, west.side.chamber
+      move south, long.hall.west
+      respond passage, tunnel, corridor, too.many.exits, passage
+   fin
+   ifany passage, tunnel, corridor
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#52
+AT dead.end.1  # checked
+   ifkey look
+      respond crawl, dark.exit, crawl
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move out, crawl, south, crossover
+   fin
+   ifany crawl
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#62  # checked
+AT dead.end.2  # checked
+   ifkey go
+      or
+   ifeq status, 1
+      move south, out, crawl, low
+   fin
+#
+#=====================================================================
+#
+#53
+AT complex # checked
+   ifkey look
+      respond crawl, dark.exit, crawl
+      respond passage, tunnel, corridor, dark.exits, passage
+      respond up, no.see.up.there
+      proceed
+   fin
+   ifkey climb, up
+      set status, 1
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move up, upward, climb, dusty
+      move west, bedquilt, bedquilt
+      move north, shell, shell
+      move east, crawl, anteroom
+      ifany tunnel, passage, corridor
+         call follow.it, bedquilt, west, shell, north
+      fin
+   fin
+   ifany crawl, passage
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#54
+AT bedquilt  # checked
+   local temp.val
+#
+   ifkey look
+      ifkey bedquilt
+         set status, 1
+      fin
+      respond passage, tunnel, corridor, dark.exits, passage
+      respond hole, useful.holes, 0
+      proceed
+   fin
+   ifkey climb
+      and
+   ifany up, hole
+      set status, 1
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+#       move east, complex
+#       move west, swiss
+#       move slab, slab
+      respond bedquilt, you.are.there
+#       ifany tunnel, passage, corridor
+#          call follow.it, swiss, west, complex, east
+#       fin
+#       ifkey nw
+#          chance 50
+#             quip still.where.you.were
+#          fin
+#          move oriental
+#       fin
+#       ifkey hole
+#          choose temp.val, 0, 3
+#          ifeq temp.val, 0
+#             lda arg1, north
+#          otherwise
+#          ifeq temp.val, 1
+#             lda arg1, south
+#          otherwise
+#          ifeq temp.val, 2
+#             lda arg1, up
+#          else
+#             lda arg1, down
+#          fin
+#       fin
+#       ifany north, south, up, down
+#          chance    65
+#             quip crawl.caved.in
+#          fin
+#          move down, anteroom
+#          chance 75
+#             move north, low
+#             move up, dusty
+#             move south, slab
+#          else
+#             move north, secret.junction
+#             move up, secret.n/s.canyon.2
+#             move south, tall.e/w.canyon
+#          fin
+#       fin
+      MOVE EAST, COMPLEX
+      MOVE WEST, SWISS
+      CHANCE 80
+         SMOVE SOUTH, BEDQUILT, STILL.WHERE.YOU.WERE
+      FIN
+      MOVE SOUTH, LARGE.ROOM
+      MOVE SLAB, SLAB
+      CHANCE 80
+         SMOVE UPWARD, BEDQUILT, STILL.WHERE.YOU.WERE
+      FIN
+      CHANCE 50
+         MOVE UPWARD, SECRET.N/S.CANYON.2
+      FIN
+      MOVE UPWARD, DUSTY
+      CHANCE 60
+         SMOVE NORTH, BEDQUILT, STILL.WHERE.YOU.WERE
+      FIN
+      CHANCE 75
+         MOVE NORTH, LOW
+      FIN
+      MOVE NORTH, SECRET.JUNCTION
+      CHANCE 80
+         SMOVE D, BEDQUILT, STILL.WHERE.YOU.WERE
+      FIN
+      MOVE D, ANTEROOM
+   fin
+   ifany bedquilt, passage, hole
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#55
+AT swiss  # checked
+   local temp.val
+#
+   ifkey look
+      respond block, bedrock.block
+      respond passage, tunnel, corridor, dark.exits, passage
+      respond wall, hole, useful.holes, 1
+      proceed
+   fin
+   ifkey climb, hole
+      set status, 1
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      ifkey hole
+         choose temp.val, 0, 4
+         ifeq temp.val, 0
+            lda arg1, canyon
+         otherwise
+         ifeq temp.val, 1
+            lda arg1, south
+         else
+            quip still.where.you.were
+         fin
+      fin
+      respond passage, tunnel, corridor, out, too.many.exits, passage
+#       move ne, bedquilt
+#       move west, east.pit.end
+#       move canyon, tall.e/w.canyon
+#       move east, soft, soft
+#       move nw, oriental, oriental
+#       ifkey south
+#          chance 33
+#             move south, tall.e/w.canyon
+#          else
+#             quip still.where.you.were
+#          fin
+#       fin
+      MOVE NE, BEDQUILT
+      MOVE WEST, EAST.PIT.END
+      CHANCE 80
+         respond SOUTH, STILL.WHERE.YOU.WERE.3
+      FIN
+      MOVE CANYON, TALL.E/W.CANYON
+      MOVE EAST, SOFT
+      CHANCE 50
+         respond NW, STILL.WHERE.YOU.WERE.3
+      FIN
+      MOVE ORIENTAL, ORIENTAL
+   fin
+   ifany block, passage, wall, hole
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#56
+AT east.pit.end  # checked
+   ifkey look
+      respond passage, tunnel, corridor, dark.exits, passage
+      respond down, pit, pit.view, 0
+      respond path, pit.path
+      respond opening, hole, lotsa.holes
+      respond slab, floor, thin.slabs
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move east, swiss
+      move west, across, cross, west.pit.end
+      move down, pit, east.pit
+      respond opening, hole, no.way.there
+      ifany tunnel, passage, corridor
+         call follow.it, swiss, east, west.pit.end, west
+      fin
+   fin
+   ifany passage, pit, opening, hole, slab
+      flag context, arg2.here
+   fin
+   lda throw.here, east.pit
+   lda throw.text, throw.pit
+#
+#=====================================================================
+#
+#57
+AT slab  # checked 
+   ifkey look
+      ifkey chamber
+         set status, 1
+      fin
+      respond slab, slab.info
+      respond ceiling, up, its.a.ceiling, c.slab.room
+      respond hole, no.see.up.there
+      respond passage, tunnel, corridor, dark.exits, passage
+      respond wall, may.climb.wall
+      respond boulder, boulders.block
+      proceed
+   fin
+   ifany climb, up
+      and
+   ifany hole, wall
+      or
+   ifkey climb, up
+      set status, 1
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move south, west.pit.end
+#       move up, climb, secret.n/s.canyon.1
+      move up, climb, large.long.tunnel
+      move north, bedquilt, bedquilt
+#       move bedquilt, bedquilt
+      respond east, west, boulders, boulders.block
+      respond slab, you.are.there
+      ifany tunnel, passage, corridor
+         call follow.it, bedquilt, north, west.pit.end, south
+      fin
+   fin
+   ifany passage, tunnel, corridor, ceiling, hole, boulder, stones, wall, slab
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#58
+AT secret.n/s.canyon.1  # checked - needs testing - btb
+   ifkey look
+      ifkey canyon
+         set status, 1
+      fin
+      respond down, no.see.down.there, 0
+   fin
+   ifkey climb, down
+      set status, 1
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move down, large.room
+      move slab, slab
+      ifeq dragon, on.rug
+         move south, secret.n/e.canyon.2
+      fin
+      move north, mirror, mirror.canyon
+      move reservoir, reservoir
+      move south, secret.n/e.canyon.1
+#       ifkey canyon
+#          call follow.it, mirror.canyon, north, secret.n/e.canyon.1, south
+#       fin
+   fin
+   ifany canyon
+      flag context, arg2.here
+   fin
+   lda throw.here, slab
+   lda throw.text, throw.room
+#
+#=====================================================================
+#
+#59
+AT secret.n/s.canyon.2  # checked
+   ifkey look
+      ifkey canyon
+         set status, 1
+      fin
+      respond down, passage, no.see.down.there, 0
+   fin
+   ifkey climb, down
+      set status, 1
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move north, secret.junction
+      move down, passage, bedquilt
+      move south, top.of.stalactite
+      ifkey canyon
+         call follow.it, secret.junction, n, top.of.stalactite, s
+      fin
+   fin
+   ifany canyon, passage
+      flag context, arg2.here
+   fin
+   lda throw.here, bedquilt
+   lda throw.text, throw.room
+#
+#=====================================================================
+#
+#60
+AT secret.junction  # checked
+   unflag west.window, no.dwarf
+   ifkey look
+#       ifkey junction
+#          set status, 1
+#       fin
+      respond canyon, dark.exits, canyon
+      respond junction, you.are.there
+      proceed
+   fin
+#    ifkey go
+#       or
+#    ifeq status, 1
+      move se, bedquilt
+      move south, secret.n/s.canyon.2
+      move north, west.window
+      respond canyon, too.many.exits, canyon
+#  Note sure about this - needs a review ....
+#    fin
+   ifany canyon
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#61
+AT low # checked
+   ifkey look
+      respond crawl, dark.exits, crawl
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move bedquilt, bedquilt
+      move sw, sloping
+      move north, dead.end.2
+      move se, oriental, oriental
+      respond crawl, too.many.exits, crawl
+   fin
+   ifany crawl
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#63
+AT secret.e/w.canyon
+   local west.room
+#
+   ifkey look
+      ifkey canyon
+         set status, 1
+      fin
+      proceed
+   fin
+   ifkey climb, down
+      set status, 1
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move east, mtking
+      move down, wide.n/s.canyon
+      ifkey west
+         ifeq dragon, on.rug      # If it's alive...
+            move secret.n/e.canyon.2
+         fin
+         move secret.n/e.canyon.3
+      fin
+      ifkey canyon
+         ifeq dragon, on.rug
+            lda west.room, secret.n/e.canyon.2
+         else
+            lda west.room, secret.n/e.canyon.3
+         fin
+         call follow.it, west.room, west, mtking, east
+      fin
+   fin
+   ifany canyon
+      flag context, arg2.here
+   fin
+   lda throw.here, wide.n/s.canyon
+   lda throw.text, throw.canyon
+#
+#=====================================================================
+#
+#64
+AT wide.n/s.canyon  # checked
+   ifkey look
+      ifkey canyon
+         set status, 1
+      fin
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move south, tight.dead.end
+      move north, tall.e/w.canyon
+      ifkey canyon
+         call follow.it, tight.dead.end, s, tall.e/w.canyon, n
+      fin
+   fin
+   ifany canyon
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#65
+AT tight.dead.end  # checked
+   ifkey look, canyon
+      set status, 1
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move out, north, canyon, wide.n/s.canyon
+   fin
+   ifany canyon
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#66
+AT tall.e/w.canyon # checked
+   ifkey look
+      ifkey canyon
+         set status, 1
+      fin
+      respond crawl, dark.exit, crawl
+      respond in, arch, light, entrance, cant.see.in
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move east, wide.n/s.canyon
+      move west, dead.end.3
+      move north, crawl, swiss
+#       move south, in, arch, valuers
+#       ifkey go, light
+#          move valuers
+#       fin
+      ifkey canyon
+         call follow.it, dead.end.3, west, wide.n/s.canyon, e
+      fin
+   fin
+   ifany canyon, crawl, entrance, arch
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#67
+AT dead.end.3  # checked
+   call default.read, words
+#  Hmmm - double check that you really want to remove this!  btb
+#    ifany words, inscription, note, message, notice
+#       respond look, read, jerry.words
+#       flag context, arg2.here
+#       proceed
+#    fin
+   ifkey look
+      respond boulders, mass.of.boulders
+      proceed
+   fin
+   respond climb, no.point.in.that
+   ifkey go
+      or
+   ifeq status, 1
+      move south, out, tall.e/w.canyon
+   fin
+   ifany boulders, stones, words, inscription, note, message, notice
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#68
+AT mazea.80  # checked
+   ifkey go
+      or
+   ifeq status, 1
+      move north, mazea.42
+      move west, south, mazea.80
+      move east, mazea.81
+   fin
+#
+#=====================================================================
+#
+#69
+AT mazea.81  # checked
+   ifkey go
+      or
+   ifeq status, 1
+      move west, out, mazea.80
+   fin
+#
+#=====================================================================
+#
+#70
+AT mazea.82  # checked
+   ifkey go
+      or
+   ifeq status, 1
+      move out, south, mazea.44
+   fin
+#
+#=====================================================================
+#
+#71
+AT mazea.83  # checked
+   ifkey go
+      or
+   ifeq status, 1
+      move south, mazea.by.pit
+      move east, mazea.84
+      move west, mazea.85
+   fin
+#
+#=====================================================================
+#
+#72
+AT mazea.84  # checked
+   ifkey go
+      or
+   ifeq status, 1
+      move north, mazea.by.pit
+      move west, mazea.83
+      move nw, mazea.114
+   fin
+#
+#=====================================================================
+#
+#73
+AT mazea.85  # checked
+   ifkey go
+      or
+   ifeq status, 1
+      move out, east, mazea.83
+   fin
+#
+#=====================================================================
+#
+#74
+AT mazea.86  # checked
+   ifkey go
+      or
+   ifeq status, 1
+      move out, up, mazea.52
+   fin
+#
+#=====================================================================
+#
+#75
+AT mazea.87  # checked
+   ifkey go
+      or
+   ifeq status, 1
+      move up, down, mazea.45
+   fin
+#
+#=====================================================================
+#
+#76
+AT narrow.corridor  # checked
+   set its.a.hole, 1    # Skip the quip, if not uttered yet.
+   ifkey look
+      respond plant, leaves, hole, beanstalk.leaves
+      respond tunnel, passage, corridor, dark.exit, corridor
+      proceed
+   fin
+   ifkey jump
+      goto west.pit
+      call splatter
+   fin
+   ifkey climb, down
+      or
+   ifkey go
+      or
+   ifeq status, 1
+      move east, plant, down, climb, hole, west.pit
+      move west, corridor, giant.room
+   fin
+   ifany tunnel, passage, corridor, plant, leaves, hole
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#77
+AT incline  # checked
+   ifkey look
+      respond down, no.see.down.there, 0
+      respond passage, tunnel, corridor, dark.exit, passage
+      respond incline, steep.incline
+      proceed
+   fin
+   ifkey climb, down
+      or
+   ifkey go
+      or
+   ifeq status, 1
+      move north, cavern, passage, cavern
+      smove down, climb, incline, low, oof
+   fin
+   ifany passage, tunnel, corridor, incline
+      flag context, arg2.here
+   fin
+   lda throw.here, low
+   lda throw.text, throw.room
+#
+#=====================================================================
+#
+#78
+AT giant.room  # checked
+   call default.read, inscription
+   ifany inscription, note, notice, message, words
+      respond read, look, fee...foo
+   fin
+   ifkey look
+      respond ceiling, up, its.a.ceiling, c.giant.room
+      respond passage, tunnel, corridor, dark.exits, passage
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move south, corridor, narrow.corridor
+#       move east, irregular.tunnel
+      smove east, giant.room, crawl.caved.in
+      move north, immense.n/s.passages
+      respond passage, tunnel, corridor, too.many.exits, passage
+   fin
+   ifany ceiling, note, notice, message, inscription, words
+      flag context, arg2.here
+   fin
+   ifany tunnel, passage, corridor
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#79
+AT immense.n/s.passages  # checked
+   ifkey look
+      respond passage, tunnel, corridor, dark.exit, passage
+      proceed
+   fin
+   set vessel, none
+   ifkey door
+      ifkey oil
+         call oil.door
+      fin
+      ifkey water
+         call water.door
+      fin
+   fin
+   ifkey pour
+      ifkey oil
+         call oil.door
+      fin
+      ifeq status, 1
+         set vessel none
+         call find.water, false
+         ifgt vessel, none
+            call oil.door
+         fin
+         call find.oil, false
+         ifgt vessel, none
+            call water.door
+         fin
+      fin
+   fin
+   ifkey empty
+      ifany bottle
+         set vessel, arg2
+         eval object.state, vessel
+         ifeq object.state, full.of.oil
+            call oil.door
+         fin
+         ifeq object.state, full.of.water
+            call water.door
+         fin
+#          ifeq object.state, full.of.champagne
+#             call dispose.liquid
+#             quip champagne.has.no.effect
+#          fin
+#          ifeq object.state, full.of.dung
+#             call empty.vessel
+#          fin
+      fin
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move south, passage, giant.room
+      ifany north, enter, cavern, door
+         ifeq door, rusty
+            quip door.needs.oil
+         fin
+         move cavern
+      fin
+   fin
+   ifany passage, tunnel, corridor
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#80
+AT cavern # checked
+   ifkey look
+#       respond waterfall, cavern.stream, 1
+      respond stream, cavern.stream, 0
+      respond whirlpool, cavern.stream, 2
+      respond passage, tunnel, corridor, dark.exits, passage
+      respond hole, large.hole
+   fin
+   lda throw.here, ylem
+   lda throw.text, throw.whirlpool
+#    ifany jump, go, in
+#       and
+#    ifany down, whirlpool
+#       set status, 1
+#    fin
+#    ifkey jump
+#       and
+#    ifany down, in
+#       set status, 1
+#    fin
+   ifkey go
+      or
+   ifeq status, 1
+      move south, out, immense.n/s.passages
+      move west, incline, incline
+      ifany tunnel, passage, corridor
+         call follow.it, immense.n/s.passages, south, incline, west
+      fin
+#       ifany jump, down, whirlpool, hole      # Jumping into whirlpool
+#          ifflag reservoir.north, been.here
+#             set status, 0
+#             call whirlpool.dive
+#          fin
+#          lda text.ptr, whirlpool?
+#          save command, text.ptr
+#          set context, q.whirlpool
+#          quip text.ptr
+#       fin
+   fin
+#    ifany waterfall, 
+#       flag context, arg2.distant
+#    fin
+   ifany  passage, hole, stream, whirlpool
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#81
+AT soft  # checked
+#    ifkey rug
+#       and
+#       not
+#    ifnear rug
+#       fakearg rug, moss
+#    fin
+   ifkey look
+      respond ceiling, up, its.a.ceiling, c.soft
+      respond walls, curtained.walls
+#       respond carpet, moss, just.a.fixture, arg2
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move east, bare.cavern
+      move se, curtain.entrance
+      move west, out, swiss, swiss
+      respond north, south, sw, nw, ne, solid.rock
+   fin
+#    ifany moss, carpet
+#       flag context, arg2.here
+#    fin
+#
+#=====================================================================
+#
+#82
+AT oriental  # checked
+   respond wall, drawings, oriental.drawing  # *Any* reference!
+   ifkey look
+      respond crawl, passage, dark.exit, arg2
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move se, swiss
+      move west, crawl, low
+      move north, passage, up, cavern, misty
+   fin
+   ifany passage, tunnel, corridor, crawl
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#83
+AT misty  # checked
+   ifkey look
+      respond down, no.see.down.there, 1
+      respond ceiling, up, its.a.ceiling, c.misty
+      respond fissure, no.see.up.there
+      respond mist, this.is.mist
+      respond path, misty.path
+      ifkey cavern
+         set status, 1
+      fin
+      proceed
+   fin
+   ifkey climb, fissure
+      or
+   ifany jump, down
+      set status, 1
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      ifkey jump
+         goto cavern
+         call splatter
+      fin
+      move south, oriental, oriental
+      move west, alcove
+      respond cavern, you.are.there
+      respond fissure, cant.fly
+      ifkey path
+         call follow.it, alcove, west, oriental, east
+      fin
+   fin
+   lda throw.text, throw.cavern
+   lda throw.here, cavern
+   ifany ceiling, mist, fissure, cavern
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#84
+AT STABLE  # checked
+   MOVE WEST, CHAPEL
+#
+#=====================================================================
+#
+#
+#85
+AT alcove  # checked
+   local carried
+#
+   ifkey look
+      ifkey alcove
+         set status, 1
+      fin
+      respond tunnel, passage, corridor, light, plover.light, tunnel
+      respond path, plover.path
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move nw, cavern, misty
+      respond alcove, you.are.there
+      ifany east, tunnel, passage, plover
+         set  carried, invct
+         ifhave emerald
+            sub carried, 1
+         fin
+         ifhave pyramid
+            sub carried, 1
+         fin
+         ifeq carried, 0
+            move plover
+         fin
+         itobj obj.ptr
+            ifhave obj.ptr
+               and
+               not
+            ifflag obj.ptr, freebie
+               quip something.doesnt.fit
+            fin
+         fin
+         move plover
+      fin
+   fin
+   ifany tunnel, passage, corridor, alcove
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#86
+AT plover  # checked
+   local carried
+#
+   ifkey look
+      ifkey chamber
+         set status, 1
+      fin
+      respond tunnel, passage, corridor, dark.exit, arg2
+      respond light, source.not.seen
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move ne, dark, in, dark
+      ifkey plover
+         ifhave emerald
+            drop  emerald
+            say something.drops
+         fin
+         move y2
+      fin
+      ifany west, out, passage, alcove
+         set  carried, invct
+         ifhave emerald
+            sub carried, 1
+         fin
+         ifhave pyramid
+            sub carried, 1
+         fin
+         ifeq carried, 0
+            move alcove
+         fin
+         itobj obj.ptr
+            ifhave obj.ptr
+               and
+               not
+            ifflag obj.ptr, freebie
+               quip something.doesnt.fit
+            fin
+         fin
+         move alcove
+      fin
+   fin
+   ifany chamber, tunnel, corridor
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#87
+AT dark # checked
+   call default.read, tablet
+   ifany stone, tablet, note, notice, message, inscription, words
+      respond pull, get, remove, leave.it.alone, tablet
+      respond read, look, dark.room
+      quip just.a.fixture, tablet
+   fin
+   ifkey look
+      respond light, corridor, plover.light, corridor
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move south, out, corridor, plover, plover
+      ifkey go, light
+         move plover
+      fin
+   fin
+   ifany tunnel, passage, corridor, stone, tablet, note, notice, words
+      or
+   ifany message, inscription
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#88
+AT arched  # checked
+   ifkey look
+      ifany hall, arched, arch
+         set status, 1
+      fin
+      respond passage, tunnel, corridor, dark.exits, passage
+      respond coral, its.coral
+      proceed
+   fin
+   ifkey get, coral
+      quip not.required
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move out, down, se, shell, shell
+#       move east, up, arched.corridor.1
+#       ifany tunnel, passage, corridor
+#          call follow.it, shell, se, arched.corridor.1, east
+#       fin
+      respond arched, hall, you.are.there
+   fin
+   ifany passage, tunnel, corridor, arched, hall, arch, coral
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#89
+AT shell  # checked 
+   ifkey look
+      respond passage, tunnel, corridor, dark.exits, passage
+      respond stone, rock, wall, floor, sedimentary.rock
+      respond shell, its.shells
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move up, upward, hall, arched
+      move down, corridor, ragged.corridor
+      respond passage, tunnel, corridor, too.many.exits, passage
+      ifany south, complex
+         ifhave clam
+            quip bivalve.too.big, clam
+         fin
+         ifhave oyster
+            quip bivalve.too.big, oyster
+         fin
+         move complex
+      fin
+   fin
+   ifany passage, tunnel, corridor, stone, shell, rock, wall, floor
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#90
+AT ragged.corridor  # checked
+   ifkey look
+      ifany tunnel, passage, corridor
+         set status, 1
+      fin
+      respond wall, sharp.walls
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move up, upward, shell, shell
+      move down, culdesac
+      ifany tunnel, passage, corridor
+         call follow.it, shell, up, culdesac, down
+      fin
+   fin
+   ifany wall, corridor
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#91
+AT culdesac  # checked
+   ifkey go
+      or
+   ifeq status, 1
+      move up, out, corridor, ragged.corridor
+      move shell, shell
+   fin
+   ifany tunnel, corridor, passage
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#92
+AT anteroom # checked
+   call default.read, sign
+   call fake.note same.as.before, sign
+   ifkey look
+      ifkey anteroom
+         set status, 1
+      fin
+      respond passage, tunnel, corridor, dark.exits, passage
+      respond remnants, digging.remnants
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move ne, unsafe
+      move south, chapel
+#       move up, complex
+#       move west, bedquilt
+      move west, complex
+      move east, witts.end
+      respond anteroom, you.are.there
+      respond passage, tunnel, corridor, too.many.exits, passage
+   fin
+   ifany passage, tunnel, corridor, anteroom, remnants
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#93
+AT mazed.107  # checked
+   ifkey look
+      respond passage, tunnel, corridor, mazed.passages
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move south, mazed.131
+      move sw, mazed.132
+      move ne, mazed.133
+      move se, mazed.134
+      move up, mazed.135
+      move nw, mazed.136
+      move east, mazed.137
+      move west, mazed.138
+      move north, mazed.139
+      move down, long.hall.west
+      respond tunnel, passage, corridor, too.many.exits, passage
+   fin
+   ifany tunnel, passage, corridor
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#94
+AT witts.end  # checked 
+#    ifle stuck, 0
+#       set stuck, 65
+#    fin
+   ifkey look
+      respond passage, tunnel, corridor, dark.exits, passage
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+#       respond passage, tunnel, corridor, too.many.exits, passage
+#       ifkey  west
+#          move witts.end
+#       fin
+#       ifany north, south, east, up, down, ne, nw, se, sw
+#          chance stuck
+#             sub stuck, 5
+#             move witts.end
+#          fin
+#          move anteroom
+#       fin
+#    fin
+      CHANCE 95
+         respond EAST, NORTH, SOUTH, NE, SE, SW, NW, UPWARD, D, STILL.WHERE.YOU.WERE.3
+      FIN
+      MOVE EAST, ANTEROOM
+      respond WEST, CRAWL.CAVED.IN.2
+   fin
+   ifany passage, tunnel, corridor
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#95
+AT mirror.canyon # checked
+   ifkey look
+      ifkey canyon
+         set status, 1
+      fin
+      respond mirror, edge.on.mirror
+      respond window, windows.too.high.to.see
+      respond mist, this.is.mist
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move south, secret.n/s.canyon.1
+      move north, mist, reservoir, reservoir
+      ifkey canyon
+         call follow.it, reservoir, north, secret.n/s.canyon.1, south
+      fin
+   fin
+   respond mirror, window, too.far.up, mirror
+   ifany canyon, mist
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#96
+AT west.window  # checked
+   call fake.window
+   ifkey look
+      respond me, its.you
+      respond pit, huge.pit
+      respond mist, this.is.mist
+      respond marks, dust, cant.tell
+      respond floor, misty.floor
+      respond passage, tunnel, corridor, dark.exit, passage
+      proceed
+   fin
+   ifkey climb
+      and
+   ifany down, pit
+      quip climbing.out.risky
+   fin
+   ifany go, jump
+      and
+   ifany pit, window
+      say broken.neck
+      goto mirror.canyon
+      call coroner
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move west, passage, tunnel, corridor, secret.junction
+      move reflect, east.window
+   fin
+   ifany pit, mist, marks, dust, passage, tunnel, corridor
+      flag context, arg2.here
+   fin
+   lda throw.here, mirror.canyon
+   lda throw.text, throw.pit
+#
+#=====================================================================
+#
+#97
+AT top.of.stalactite  # checked
+   ifkey look
+      respond floor, cant.see.much, floor
+      respond ceiling, roof, stalactite.roof
+      respond stalactite, stalactite.in.maze
+      proceed
+   fin
+#    ifany jump, climb
+#       ifany down, stalactite
+#          or
+#       ifeq status, 1
+#          move mazea.50
+#       fin
+#    fin
+   ifkey go
+      or
+   ifeq status, 1
+      MOVE NORTH, SECRET.N/S.CANYON.2
+      CHANCE 40
+         MOVE D, JUMP, CLIMB, MAZEA.50
+      FIN
+      CHANCE 50
+         MOVE D, MAZEA.53
+      FIN
+      MOVE D, MAZEA.45
+#       move north, secret.n/s.canyon.2
+#       ifany down, stalactite
+#          chance 67
+#             chance 50
+#                move mazea.53
+#             fin
+#             move mazea.45
+#          else
+#             move mazea.50
+#          fin
+#       fin
+   fin
+   ifany stalactite
+      flag context, arg2.here
+   fin
+   lda throw.text, throw.room
+   lda throw.here, mazea.53
+#
+#=====================================================================
+#
+#98
+AT mazed.112  # checked
+   ifkey look
+      respond passage, tunnel, corridor, mazed.passages
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move sw, mazed.131
+      move north, mazed.132
+      move east, mazed.133
+      move nw, mazed.134
+      move se, mazed.135
+      move ne, mazed.136
+      move west, mazed.137
+      move down, mazed.138
+      move up, mazed.139
+      move south, mazed.140
+      respond passage, tunnel, corridor, too.many.exits, passage
+   fin
+   ifany passage, tunnel, corridor
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#99
+AT LARGE.LONG.TUNNEL   # checked
+   MOVE D, WEST, SLAB
+   MOVE EAST, LARGE.ROOM
+#
+#=====================================================================
+#
+AT LARGE.ROOM  # checked
+   MOVE WEST, LARGE.LONG.TUNNEL
+   MOVE EAST, CRAWL, UPWARD, SECRET.N/S.CANYON.1
+#
+#=====================================================================
+#
+#100
+AT reservoir  # checked
+   ifkey look
+      respond hole, stream, stream.hole
+      respond mist, this.is.mist
+      respond reservoir, reservoir.info
+      respond passage, tunnel, corridor, reservoir.passages, 0
+#       respond causeway, cant.see.properly, causeway
+      proceed
+   fin
+   ifany in, swim, cross
+      and
+   ifany water, reservoir
+      set status, 1
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      respond cross, water, reservoir, stream, hole, north, swim, cant.swim
+      move south, out, mirror, passage, mirror.canyon
+      move west, enter, north, nw, causeway, causeway
+   fin
+   ifany hole, stream, mist
+      flag context, arg2.distant
+   fin
+   ifany reservoir, passage
+      flag context, arg2.here
+   fin
+   lda throw.text, throw.reservoir
+   lda throw.here, ylem
+#
+#=====================================================================
+#
+#102
+AT sw.of.chasm  # checked
+   ifkey bridge
+      apport bridge, here
+   fin
+   lda throw.text, throw.chasm
+   lda throw.here, ylem
+   ifeq chasm, bridged
+      call default.read, sign
+   else
+      call default.read, notice
+   fin
+   call fake.note, same.as.before, arg2
+   ifkey look
+      respond corridor, dark.exit, corridor
+      proceed
+   fin
+   ifeq chasm, bridged
+      ifkey throw
+         ifeq status, 1
+            or
+         ifnear troll2
+            proceed
+         fin
+         ifany axe
+            ifhave arg2
+               drop arg2
+               quip el.cheapo, arg2
+            fin
+            proceed
+         fin
+         ifflag arg2, object
+            ifflag arg2, valued
+               ifhave arg2
+                  ifkey nest
+                     ifflag troll, special1
+                        set troll, wants.treasure
+                        apport nest, ylem   # Destroy eggs
+                        flag nest, special2 # They won't come back!
+                        quip fool.me.once
+                     fin
+                     flag nest, special1    # Note that troll's got them
+                  fin
+                  call check.wearing
+                  set troll, bought.off
+                  apport troll, limbo
+                  apport troll2, sw.of.chasm
+                  apport arg2, ylem
+                  quip bought.him.off, arg2
+               fin
+            fin
+         fin
+      fin
+   fin
+   ifkey jump
+      ifkey cross
+         or
+      ifeq status, 1
+         and
+      ifeq chasm, bridged
+         quip try.the.bridge
+      fin
+      goto ylem
+      call splatter
+   fin
+   ifkey cross, bridge
+      set status, 1
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move sw, down, sloping, corridor, sloping
+      ifany cross, bridge, ne
+         ifgt chasm, bridged
+            quip no.bridge
+         fin
+#          ifhave mask, worn
+#             iflt troll, scared.off
+#                say troll.zorro
+#             fin
+#             move ne.of.chasm
+#          fin
+         ifeq troll, wants.treasure
+            ifnear troll2
+               apport troll2, limbo
+               apport troll, here
+               quip troll.wants.treasure
+            fin
+            quip troll.blocks.way
+         fin
+         ifeq troll, will.be.back
+            set troll, wants.treasure
+            apport  troll, sw.of.chasm
+            flag troll, schizoid
+            apport troll2, limbo
+            quip troll.wants.treasure
+         fin
+         ifeq troll, bought.off
+            set troll, will.be.back
+         fin
+         move ne.of.chasm
+      fin
+   fin
+   ifkey notice, note, inscription, message, words, sign
+      or
+   ifany tunnel, passage, corridor
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#103
+AT sloping  # checked - but may want to modify
+   ifkey look
+      ifany tunnel, passage, corridor
+         set status, 1
+      fin
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+#   Note - may want to reinstate these two - 440 didn't have the sw and ne
+# btb
+        move d, low
+#       move down, sw, out, low, low
+#       ifany up, ne, chasm
+        ifkey up
+         ifloc troll, sw.of.chasm
+            apport troll, limbo
+            apport troll2, sw.of.chasm
+         fin
+         move sw.of.chasm
+      fin
+      ifany tunnel, passage, corridor
+         call follow.it, sw.of.chasm, ne, low, sw
+      fin
+   fin
+   ifany tunnel, passage, corridor
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#104
+AT secret.n/e.canyon.1
+   ifkey carcass
+      and
+   ifnear dragon
+      and
+   ifgt dragon, on.rug
+      fakearg carcass, dragon
+   fin
+   ifkey rug
+      and
+   ifeq dragon, on.rug
+      respond look, rug.under.dragon
+      respond get, pull, roll, wash, fly, dragon.guards.rug
+   fin
+   ifkey look
+      ifkey canyon
+         set status, 1
+      fin
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move north, out, secret.n/s.canyon.1
+      ifany forward, east
+         ifeq dragon, on.rug
+            call sneaks.die
+            quip dragon.blocks.way
+         fin
+         move secret.e/w.canyon
+      fin
+      ifkey canyon
+         ifeq dragon, on.rug
+            move there
+         fin
+         call follow.it, secret.n/s.canyon.1, n, secret.e/w.canyon, e
+      fin
+   fin
+   ifany canyon
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#105
+AT secret.n/e.canyon.2  # checked
+   ifkey rug
+      and
+   ifeq dragon, on.rug
+      respond look, rug.under.dragon
+      respond get, pull, roll, wash, fly, dragon.guards.rug
+   fin
+   ifkey look
+      ifkey canyon
+         set status, 1
+      fin
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move east, out, secret.e/w.canyon
+      ifany forward, north
+         ifeq dragon, on.rug
+            call sneaks.die
+            quip dragon.blocks.way
+         fin
+         move secret.n/s.canyon.1
+      fin
+      ifkey canyon
+         ifeq dragon, on.rug
+            move there
+         fin
+         call follow.it, secret.n/s.canyon.1, n, secret.e/w.canyon, e
+      fin
+   fin
+   ifany canyon
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+AT secret.n/e.canyon.3  # checked - but not completely sure - needs testing
+# btb
+   ifkey rug
+      and
+   ifeq dragon, on.rug
+      respond look, rug.under.dragon
+      respond get, pull, roll, wash, fly, dragon.guards.rug
+   fin
+   ifkey look
+      ifkey canyon
+         set status, 1
+      fin
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move east, out, secret.e/w.canyon
+      ifany forward, north
+         ifeq dragon, on.rug
+            call sneaks.die
+            quip dragon.blocks.way
+         fin
+#          move secret.n/s.canyon.1
+      fin
+#       ifkey canyon
+#          ifeq dragon, on.rug
+#             move there
+#          fin
+#          call follow.it, secret.n/s.canyon.1, n, secret.e/w.canyon, e
+#       fin
+   fin
+   ifany canyon
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#
+#106
+AT ne.of.chasm  # checked
+   ifkey bridge
+      apport bridge, here
+   fin
+   ifeq chasm, bridged
+      call default.read, sign
+   else
+      call default.read, notice
+   fin
+   call fake.note, nothing.more.to.read, arg2
+   ifkey look
+      respond path, nothing.special, path
+      proceed
+   fin
+   lda throw.text, throw.chasm
+   lda throw.here, ylem
+   ifany drop, throw, free
+      and
+   ifkey bear
+      ifhave bear
+         and
+      ifnear troll
+         set troll, scared.off
+         apport troll, ylem
+         apport troll2, sw.of.chasm
+         drop bear
+         say freed.bear
+         quip bear.chases.troll
+      fin
+   fin
+   ifkey throw
+      and
+   ifeq chasm, bridged
+      ifeq status, 1
+         or
+      ifnear troll2
+         proceed
+      fin
+      ifany axe
+         ifhave arg2
+            drop arg2
+            quip el.cheapo, arg2
+         fin
+         proceed
+      fin
+      ifflag arg2, object
+         ifflag arg2, valued
+            ifhave arg2
+               ifkey nest
+                  ifflag troll, special1
+                     set troll, wants.treasure
+                     apport nest, ylem  # Destroy eggs
+                     flag nest, special2 # They won't come back
+                     quip fool.me.once
+                  fin
+                  flag nest, special1    # Note that troll's got them
+               fin
+               set troll, bought.off
+               apport troll, limbo
+               apport troll2, sw.of.chasm
+               apport arg2, ylem
+               quip bought.him.off, arg2
+            fin
+         fin
+      fin
+   fin
+   ifkey jump
+      ifkey cross
+         or
+      ifeq status, 1
+         and
+      ifeq chasm, bridged
+         quip try.the.bridge
+      fin
+      goto ylem
+      call splatter
+   fin
+   ifkey cross, bridge
+      set status, 1
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move ne, corridor, corridor
+      move fork, fork
+      move view, breathtaker
+      move barren, barren
+      ifany cross, bridge, sw
+         ifgt chasm, bridged
+            quip no.bridge
+         fin
+#          ifhave mask, worn
+#             iflt troll scared.off
+#                say troll.zorro
+#             fin
+#             move sw.of.chasm
+#          fin
+         ifeq troll, wants.treasure
+            ifnear troll2
+               apport troll, sw.of.chasm
+               apport troll2, limbo
+               quip troll.wants.treasure
+            fin
+            quip troll.blocks.way
+         fin
+         ifeq troll, will.be.back
+            ifhere bear
+               set troll, scared.off
+               apport troll, ylem
+               quip bear.spots.troll
+            fin
+            set troll, wants.treasure
+            apport  troll, sw.of.chasm
+            flag troll, schizoid
+            apport troll2, limbo
+            quip troll.wants.treasure
+         fin
+         ifeq troll, bought.off
+            set troll, will.be.back
+         fin
+         ifhave bear
+            say bear.wrecks.bridge
+            set chasm, bridge.wrecked
+            apport troll2, limbo
+            goto ylem
+            call coroner
+         fin
+         ifeq troll, scared.off
+            and
+         ifflag troll, special1      # Already stole eggs back?
+            ifnear bear
+               get bear
+               set chasm, bridge.wrecked
+               say trolls.revenge, 0
+            else
+               set chasm, bridge.burned
+               say trolls.revenge, 1
+            fin
+            apport troll2, limbo
+            goto ylem
+            call coroner
+         fin
+         move sw.of.chasm
+      fin
+   fin
+   ifany path
+      flag context, arg2.here
+   fin
+   ifany notice, note, inscription, message, words, sign
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#107
+AT corridor  # checked
+   ifkey look
+      ifany tunnel, passage, corridor
+         set status, 1
+      fin
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      ifany west, chasm
+         ifloc troll, sw.of.chasm
+            apport troll, limbo
+            apport troll2, sw.of.chasm
+         fin
+         move ne.of.chasm
+      fin
+      move east, fork, fork
+      move view, breathtaker
+      move barren, barren
+      ifany tunnel, passage, corridor
+         call follow.it, ne.of.chasm, west, fork, east
+      fin
+   fin
+   ifany tunnel, passage, corridor
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#108
+AT fork  # checked
+   ifkey look
+      respond fork, dark.exits, corridor
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+#       move chasm, ne.of.chasm
+      move west, corridor, corridor
+      move ne, left, warmjunctn
+      move se, right, down, limestone
+      move view, breathtaker
+      move barren, barren
+      respond tunnel, passage, corridor, fork, too.many.exits, corridor
+   fin
+   ifany tunnel, passage, corridor, fork
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#109
+AT warmjunctn  # checked
+   ifkey look
+#       ifkey junction
+#          set status, 1
+#       fin
+      respond passage, tunnel, corridor, crawl, dark.exit, arg2
+      respond wall, warm.wall
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move south, fork, passage, fork
+      move north, view, breathtaker
+      move east, crawl, boulder.chamber
+   fin
+   ifany passage, crawl
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#110
+AT breathtaker # checked
+#    ifany bridge, arch
+#       and
+#    ifeq volcano, 2
+#       apport bridge, here
+#    fin
+   ifkey look
+      respond roof, ceiling, formations, alabaster, alabaster.formations
+      respond shadows, wall, shadows, no.apparitions
+#       respond gorge, volcano.sight
+      respond fountains, flow, molten.lava
+      respond passage, tunnel, corridor, dark.exit, passage
+      respond entrance, valley, cant.see.much, valley
+      respond glow, lava, fire, lava.glows
+      respond geyser, hellish.scene
+      respond ash, floating.ash
+      proceed
+   fin
+#    ifkey volcano
+#       respond listen, volcano.roar
+#       flag context, arg2.distant
+#       proceed
+#    fin
+   ifkey jump, up
+      quip you.jump
+   fin
+#    ifkey cross
+#       and
+#    ifany bridge, arch, gorge
+#       or
+#    ifkey jump
+#       set status, 1
+#    fin
+   ifkey go
+      or
+   ifeq status, 1
+      move south, out, passage, warmjunctn
+      move fork, fork
+      ifkey jump
+         goto ylem
+         call splatter            # Let him plummet to a painful death
+      fin
+      ifany valley, cross, bridge, north, arch
+#          ifeq volcano, 0
+#             quip no.arch
+#          fin
+         say hungry.fumes
+#          ifhave ring, worn
+#             ifhave bear
+#                say burn.bear
+#                apport bear, ylem
+#             else
+#                  not
+#                ifflag faces, been.here
+#                   unflag breathtaker, hintable
+#                fin
+#                say fumes.miss
+#           fin
+#             move faces
+#          fin
+         ifhave bear
+            say burn.both
+         else
+            say fumes.burn
+         fin
+#          ifhave ring
+#             say wear.ring.perhaps?
+#          fin
+         goto ylem
+         call coroner
+      fin
+   fin
+#    ifany volcano, passage, gorge, fire, shadows, roof, ceiling
+#       flag context, arg2.distant
+#    fin
+   ifany alabaster, formations, wall, entrance
+      flag context, arg2.here
+   fin
+#    ifany geyser, lake, island, ash, valley, fountains
+#       flag context, arg2.distant
+#    fin
+   lda throw.text, throw.gorge
+   lda throw.here, ylem
+#
+#=====================================================================
+#
+#111
+AT boulder.chamber   # checked
+   ifkey look
+      respond crawl, dark.exit, crawl
+      respond wall, warm.walls
+      respond boulder, chamber.boulders
+      ifkey chamber
+         set status, 1
+      fin
+      proceed
+   fin
+   ifkey crawl, out
+      set status, 1
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move west, out, crawl, warmjunctn
+      move fork, fork
+      move view, breathtaker
+      respond chamber, you.are.there
+   fin
+   ifany boulders, stones, chamber, wall
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#112
+AT limestone # checked
+   ifkey look
+      respond wall, limestone, formations, odd.formations
+      ifany tunnel, passage, corridor
+         set status, 1
+      fin
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move north, up, upward, fork, fork
+      move south, down, barren, barren
+      move view, breathtaker
+      ifany tunnel, passage, corridor
+         call follow.it, barren, south, fork, north
+      fin
+   fin
+   ifany passage, tunnel, corridor, limestone, formations
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#113
+AT barren # checked
+   flag bear, seen    # Allow references to the bear
+   call default.read, sign
+   call fake.note, same.as.before, sign
+   ifkey look
+      respond in, entrance, east, dark.there, in
+      respond passage, tunnel, corridor, dark.exit, passage
+      respond limestone, its.a.mineral, limestone
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move west, up, upward, passage, limestone, limestone
+      move fork, fork
+      move east, in, barren, bear, enter, bear.room
+      move view, breathtaker
+   fin
+   ifany entrance, limestone, passage
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#114
+AT bear.room # checked
+   ifkey look
+      respond marks, dust, cant.tell
+      respond exit, dark.there, out
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move west, out, barren
+      move fork, fork
+      move view, breathtaker
+   fin
+   ifkey get
+      ifeq status, 1
+         default portable
+      fin
+      ifkey axe
+         and
+      ifhere axe
+         quip bear.guards.axe, arg2
+      fin
+   fin
+   ifany marks, dust, exit
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#115
+AT mazed.131   # checked
+   ifkey look
+      respond passage, tunnel, corridor, mazed.passages
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move west, mazed.107
+      move se, mazed.132
+      move nw, mazed.133
+      move sw, mazed.134
+      move ne, mazed.135
+      move up, mazed.136
+      move down, mazed.137
+      move north, mazed.138
+      move south, mazed.139
+      move east, mazed.112
+      respond passage, tunnel, corridor, too.many.exits, passage
+   fin
+   ifany passage, tunnel, corridor
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#116
+AT mazed.132  # checked
+   ifkey look
+      respond passage, tunnel, corridor, mazed.passages
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move nw, mazed.107
+      move up, mazed.131
+      move north, mazed.133
+      move south, mazed.134
+      move west, mazed.135
+      move sw, mazed.136
+      move ne, mazed.137
+      move east, mazed.138
+      move down, mazed.139
+      move se, mazed.112
+      respond passage, tunnel, corridor, too.many.exits, passage
+   fin
+   ifany passage, tunnel, corridor
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#117
+AT mazed.133  # checked
+   ifkey look
+      respond passage, tunnel, corridor, mazed.passages
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move up, mazed.107
+      move down, mazed.131
+      move west, mazed.132
+      move ne, mazed.134
+      move sw, mazed.135
+      move east, mazed.136
+      move north, mazed.137
+      move nw, mazed.138
+      move se, mazed.139
+      move south, mazed.112
+      respond passage, tunnel, corridor, too.many.exits, passage
+   fin
+   ifany passage, tunnel, corridor
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#118
+AT mazed.134   # checked
+   ifkey look
+      respond passage, tunnel, corridor, mazed.passages
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move ne, mazed.107
+      move north, mazed.131
+      move nw, mazed.132
+      move se, mazed.133
+      move east, mazed.135
+      move down, mazed.136
+      move south, mazed.137
+      move up, mazed.138
+      move west, mazed.139
+      move sw, mazed.112
+      respond passage, tunnel, corridor, too.many.exits, passage
+   fin
+   ifany passage, tunnel, corridor
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#119
+AT mazed.135  # checked
+   ifkey look
+      respond passage, tunnel, corridor, mazed.passages
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move north, mazed.107
+      move se, mazed.131
+      move down, mazed.132
+      move south, mazed.133
+      move east, mazed.134
+      move west, mazed.136
+      move sw, mazed.137
+      move ne, mazed.138
+      move nw, mazed.139
+      move up, mazed.112
+      respond passage, tunnel, corridor, too.many.exits, passage
+   fin
+   ifany passage, tunnel, corridor
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#120
+AT mazed.136  # checked
+   ifkey look
+      respond passage, tunnel, corridor, mazed.passages
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move east, mazed.107
+      move west, mazed.131
+      move up, mazed.132
+      move sw, mazed.133
+      move down, mazed.134
+      move south, mazed.135
+      move nw, mazed.137
+      move se, mazed.138
+      move ne, mazed.139
+      move north, mazed.112
+      respond passage, tunnel, corridor, too.many.exits, passage
+   fin
+   ifany passage, tunnel, corridor
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#121
+AT mazed.137   # checked
+   ifkey look
+      respond passage, tunnel, corridor, mazed.passages
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move se, mazed.107
+      move ne, mazed.131
+      move south, mazed.132
+      move down, mazed.133
+      move up, mazed.134
+      move nw, mazed.135
+      move north, mazed.136
+      move sw, mazed.138
+      move east, mazed.139
+      move west, mazed.112
+      respond passage, tunnel, corridor, too.many.exits, passage
+   fin
+   ifany passage, tunnel, corridor
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#122
+AT mazed.138   # checked
+   ifkey look
+      respond passage, tunnel, corridor, mazed.passages
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move down, mazed.107
+      move east, mazed.131
+      move ne, mazed.132
+      move up, mazed.133
+      move west, mazed.134
+      move north, mazed.135
+      move south, mazed.136
+      move se, mazed.137
+      move sw, mazed.139
+      move nw, mazed.112
+      respond passage, tunnel, corridor, too.many.exits, passage
+   fin
+   ifany passage, tunnel, corridor
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#123
+AT mazed.139  # checked
+   ifkey look
+      respond passage, tunnel, corridor, mazed.passages
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move sw, mazed.107
+      move nw, mazed.131
+      move east, mazed.132
+      move west, mazed.133
+      move north, mazed.134
+      move down, mazed.135
+      move se, mazed.136
+      move up, mazed.137
+      move south, mazed.138
+      move ne, mazed.112
+      respond passage, tunnel, corridor, too.many.exits, passage
+   fin
+   ifany passage, tunnel, corridor
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#124
+AT mazed.140   # checked
+   call default.read, instructions
+   ifany instructions, note, inscription, notice, words, message
+      and
+   ifany read, look
+      say vending.info
+#       quip no.change
+   fin
+   ifkey look
+      respond tray, its.a.tray
+      respond slot, its.a.slot
+      respond passage, tunnel, corridor, dark.exit, passage
+      proceed
+   fin
+   ifkey drop
+      and
+   ifany coins
+      and
+   ifhave arg2
+      drop arg2
+#       respond obolus, coin.no.good, arg2
+#       respond bag, not.legal.tender
+      apport coins, ylem
+      apport batteries, here
+      flag batteries, seen
+      set machine, 1
+      quip bought.batteries
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move north, out, passage, tunnel, corridor, mazed.112
+   fin
+   ifany instructions, note, inscription, notice, words, message
+      or
+   ifany passage, tunnel, corridor, tray, slot
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+# at wide.n/s.corridor
+#    ifkey look
+#       ifany tunnel, passage, corridor
+#          set status, 1
+#       fin
+#       proceed
+#    fin
+#    ifkey go
+#       or
+#    ifeq status, 1
+#       move south, mtking
+#       move north, wide.e/w.corridor
+#       ifany tunnel, passage, corridor
+#          call follow.it, mtking, south, wide.e/w.corridor, north
+#       fin
+#    fin
+#    ifany tunnel, passage, corridor
+#       flag context, arg2.here
+#    fin
+#
+#=====================================================================
+#
+# at wide.e/w.corridor
+#    ifkey look
+#       ifkey bend
+#          set status, 1
+#       fin
+#       respond tunnel, passage, corridor, dark.exits, corridor
+#       proceed
+#    fin
+#    ifkey go
+#       or
+#    ifeq status, 1
+#       move south, sw, west, wide.n/s.corridor
+#       move north, ne, east, toolroom
+#       ifany tunnel, passage, corridor
+#          call follow.it, toolroom, east, wide.n/s.corridor, west
+#       fin
+#    fin
+#    ifany tunnel, passage, corridor
+#       flag context, arg2.here
+#    fin
+#
+#=====================================================================
+#
+#125
+AT half.stairs  # checked
+   ifkey look
+#       ifany steps
+#          say spiral.stair
+#          quip blank
+#       fin
+      respond seams, rock, gold, wall, gold.seams
+      respond minerals, reflective.minerals
+      ifkey shaft
+         set status, 1
+      fin
+      proceed
+   fin
+   ifkey get, gold
+      quip gold.seams
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      flag orb, seen                 # He almost certainly will!
+      move up, upward, south.side.chamber
+      move down, cellar.view
+      ifkey steps
+         call follow.it, south.side.chamber, up, cellar.view, down
+      fin
+      respond shaft, you.are.there
+   fin
+   ifany steps minerals, wall, gold, rock, seams, shaft
+      flag context, arg2.here
+   fin
+   lda throw.text, throw.downstairs
+   lda throw.here, cellar.view
+#
+#=====================================================================
+#
+#127
+AT chapel # checked
+#    fakearg steps
+   ifkey look
+      respond ceiling, up, its.a.ceiling, c.chapel
+      respond beams, chapel.beams, 0
+      respond spiral, column, slab, hole, stone.spiral, 0
+      proceed
+   fin
+#    ifkey rope
+#       respond get, pull, no.use.rope, 0
+#       respond swing, push, no.use.rope, 1
+#    fin
+   set beams, 0
+#    ifkey rope
+#       and
+#    ifany up, go
+#       lda arg1, climb
+#    fin
+#    ifkey climb
+#       and
+#    ifany up, rope
+#       set status, 1
+#    fin
+   ifkey go
+      or
+   ifeq status, 1
+      move climb, beams
+      move north, anteroom
+#       move west, vestry
+      move west, up, top.of.chapel
+      move east, stable
+      move down, hole, crypt
+      ifany stairs
+         call follow.it, top.of.chapel, up, crypt, down
+      fin
+   fin
+   ifany hole, steps, slab, spiral, column
+      flag context, arg2.here
+   fin
+   ifany ceiling, beams
+      flag context, arg2.distant
+   fin
+#
+#=====================================================================
+#
+#128
+AT quarters  # checked
+   ifkey couch
+      respond look, solid.couch
+      respond push, pull, lift, couch.too.heavy
+      quip just.a.fixture, couch
+   fin
+   ifkey look
+      ifkey eggs
+         and
+      ifeq giant, blissful
+         quip eggs.being.munched
+      fin
+      respond light, hidden.light
+      respond opening, dark.exits, opening
+      respond exit, pantry, dark.in.there, pantry
+      ifany quarters, chamber
+         set status, 1
+      fin
+      proceed
+   fin
+   ifeq stage, closing.soon
+      call closing.time
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      respond quarters, chamber, you.are.there
+      move north, dungeon, dungeon
+      move south, web.maze.1
+      move east, pantry, pantry
+   fin
+   ifany openings
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#129
+AT beams  # checked
+   set beams, 1
+#    ifkey rope
+#       ifkey look
+#           describe rope, 1
+#           quit
+#       fin            
+#       respond get, free, no.use.rope, 2
+#       respond pull, no.use.rope, 3
+#       respond swing, no.use.rope, 1
+#    fin
+   ifkey look
+      ifkey recess
+         set status, 1
+      fin
+      respond ceiling, its.a.ceiling, c.chapel
+      respond beams, chapel.beams, 1
+      respond wood, beams.wood
+      proceed
+   fin
+   respond recess, you.are.there
+   ifkey go
+      or
+   ifeq status, 1
+      move out, climb, down, chapel
+   fin
+   ifany beams, ceiling
+      flag context, arg2.here
+   fin
+   ifany beams, wood
+      flag context, arg2.here
+   fin
+   lda drop.here, chapel
+   lda throw.here, chapel
+   set throw.it, true
+   lda drop.text, drop.to.darkness
+   lda throw.text, drop.to.darkness
+#
+#=====================================================================
+#
+#130
+AT dungeon  # maybe checked ... depends on giant.stuff
+#  need to play 440 ! and see what happens ... btb
+   ifany drink, pour
+      proceed
+   fin
+   respond water, water.drops
+   ifkey stone
+      fakecom stone, flagstones
+   fin
+   ifkey look, flagstones
+      ifflag status, light.here
+      else
+         quip its.too.dark
+      fin
+   fin
+   ifkey look
+      respond stanchions, just.scenery, stanchions
+      respond ceiling, up, its.a.ceiling, c.dungeon
+      respond rock, impenetrable.rock
+      respond passage, tunnel, corridor, dungeon.passage
+      respond floor, down, flagstone.info, dungeon
+      ifkey hole, opening
+         and
+      ifeq dungeon, flagstone.moved
+         quip dark.in.there, hole
+      fin
+      ifkey dungeon
+         set status, 1
+      fin
+      proceed
+   fin
+   ifkey flagstones
+      ifany lift, pull, move
+         say flagstone.lift, dungeon
+         ifeq dungeon, flagstone.fixed
+         else
+            set dungeon, flagstone.moved
+            set mouse.time, -1   # Zap the mouse
+         fin
+         quit
+      fin
+      flag context, arg2.here
+      proceed
+   fin
+   ifany in, climb
+      and
+   ifany hole, down
+      or
+   ifkey climb, in
+      set status, 1
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move out, south, passage, quarters
+      ifany down, in, hole, opening
+         and
+      ifeq dungeon, flagstone.moved
+         move dungeon.exit
+      fin
+      respond dungeon, you.are.there
+   fin
+   ifany dungeon, passage
+      flag context, arg2.here
+   fin
+   ifeq dungeon, flagstone.moved
+      ifany hole, opening
+         flag context, arg2.here
+      fin
+   fin
+   ifany stanchions, passage, dungeon
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#131
+AT web.maze.1  # checked  - but will need testing - btb
+   ifkey look
+      respond passage, tunnel, corridor, dark.exits, passage
+#       ifkey maze
+#          set status, 1
+#       fin
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move pantry, pantry
+      move east, web.maze.2
+      move west, web.maze.6
+      move up, web.maze.5
+      move down, web.maze.3
+      move north, quarters
+      respond maze, you.are.there
+   fin
+   ifany passage, tunnel, corridor
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#132
+AT web.maze.2  # checked
+   ifkey look
+      respond passage, tunnel, corridor, dark.exits, passage
+#       ifkey maze
+#          set status, 1
+#       fin
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move north, web.maze.1
+      move east, down, web.maze.2
+      move west, web.maze.6
+      move south, web.maze.3
+      move up, web.maze.4
+   fin
+   ifany passage, tunnel, corridor
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#133
+AT web.maze.3  # checked
+   ifkey look
+      respond passage, tunnel, corridor, dark.exits, passage
+      ifkey maze
+         set status, 1
+      fin
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move north, web.maze.2
+      move east, down, web.maze.3
+      move west, web.maze.1
+      move south, web.maze.4
+      move up, web.maze.5
+   fin
+   ifany passage, tunnel, corridor
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#134
+AT web.maze.4  # checked
+   ifkey look
+      ifany threads
+         ifnear spider
+            quip sticky.web
+         fin
+         quip sticky.web
+      fin
+      ifany hole, opening
+         and
+         not
+      ifeq web, in.shreds
+         ifis arg1, hole
+            or
+         ifis arg1, opening
+            quip i.dont.see, arg1
+         else
+            quip i.dont.see, arg2
+         fin
+      fin
+      respond passage, tunnel, corridor, dark.exits, passage
+      ifany opening, hole
+         and
+      ifeq web, in.shreds
+         quip dark.way, arg2
+      fin
+      ifkey maze
+         set status, 1
+      fin
+      proceed
+   fin
+   ifkey throw, axe
+      and
+   ifhave axe
+      and
+   ifnear spider
+      set axe, by.spider
+      drop axe
+      quip spider.dodges
+   fin
+   ifkey get
+      ifeq status, 1
+         default portable
+      fin
+      ifkey axe
+         and
+      ifeq axe, by.spider
+         quip no.kill.spider
+      fin
+   fin
+   ifkey documents
+      and
+   ifeq web, with.documents
+      respond look, read, get, pull, push, documents.stuck
+      quip hah!
+   fin
+   ifkey in
+      and
+   ifany hole, opening
+      set status, 1
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move north, web.maze.2
+      move west, web.maze.6
+      move east, web.maze.3
+      move up, web.maze.5
+      ifany south, in, hole, opening
+         call sneaks.die
+         ifeq web, with.spider
+            quip no.kill.spider
+         fin
+         ifeq web, with.documents
+            quip nasty.web
+         fin
+#          move dank.cave
+      fin
+   fin
+   ifany web, threads
+      respond get, pull, no.handle.web
+   fin
+   respond threads, hah!
+   ifany passage, tunnel, corridor, hole, opening
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#135
+AT web.maze.5  # checked
+   ifkey look
+      respond passage, tunnel, corridor, dark.exits, passage
+      ifkey maze
+         set status, 1
+      fin
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move north, web.maze.6
+      move east, web.maze.1
+      move west, up, web.maze.5
+      move south, web.maze.4
+      move down, web.maze.3
+   fin
+   ifany passage, tunnel, corridor
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#136
+AT web.maze.6  # checked
+   ifkey look
+      respond passage, tunnel, corridor, dark.exits, passage
+      ifkey maze
+         set status, 1
+      fin
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move west, north, web.maze.6
+      move east, web.maze.1
+      move south, web.maze.4
+      move up, web.maze.5
+      move down, web.maze.2
+   fin
+   ifany passage, tunnel, corridor
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#137
+AT basement # checked
+   call default.read, note
+   call fake.note, nothing.more.to.read, note
+   ifkey counterweights
+      respond look, delicate.mechanism
+      respond break, push, pull, no.break.mechanism
+      flag context, arg2.here
+      proceed
+   fin
+   ifkey slab
+      respond look, suspended.slab
+      respond pull, push, close, no.move.slab, arg1
+      respond break, leave.it.alone, slab
+      flag context, arg2.here
+      proceed
+   fin
+   ifkey look
+      respond ceiling, up, its.a.ceiling, c.basement
+      respond steps, well.worn.steps
+      respond opening, hole, dark.exit, opening
+      ifkey basement
+         set status, 1
+      fin
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move up, steps, curtain.entrance
+      smove in, south, opening, hole, cellar, slab.shuts
+      respond basement, you.are.there
+   fin
+   ifany steps, basement, opening, hole
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#138
+AT cellar  # checked
+#    ifkey portcullis
+#       ifany oil, look
+#       else
+#          quip portcullis.rusty
+#       fin
+#    fin
+   ifkey look
+      respond steps, rusty.staircase
+      respond chamber, portcullis.chamber
+      respond wall, ceiling, brick.cellar
+      respond floor, cellar.floor
+      respond bricks, cellar.bricks
+      respond slab, cellar.slab
+      ifkey cellar
+         set status, 1
+      fin
+      proceed
+   fin
+#    ifkey drain
+#       and
+#    ifany down, in
+#       set status, 1
+#    fin
+   ifkey slab
+      respond push, no.push, slab
+      respond pull, no.pull, slab
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      respond steps, out, chamber, no.go.portcullis
+#       respond drain, in, down, drain.too.small
+      respond cellar, you.are.there
+   fin
+   ifgt status, 1
+      and
+   ifflag arg2, object
+      and
+   ifflag arg2, big
+   else
+      lda throw.here, sea.view
+      lda throw.text, down.the.dshaft
+      set throw.it, true
+      set drop.here, throw.here
+      set drop.text, throw.text
+   fin
+   ifany steps, cellar, bricks, chamber, slab
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#126  # checked
+AT cellar.view
+   ifkey climb
+      ifany steps, up
+         or
+      ifeq status, 1
+         move half.stairs
+      fin
+      quip no.climb.portcullis
+   fin
+   ifkey orb
+      and
+   ifloc orb, cellar
+      respond look, crystal.ball
+      quip orb.out.of.reach
+   fin
+#    ifkey portcullis
+#       ifany oil, look
+#       else
+#          quip portcullis.rusty
+#       fin
+#    fin
+   ifkey look
+#       ifany steps
+#          say spiral.stair
+#          quip blank
+#       fin
+      respond cellar, cellar.viewing
+#       respond drain, cant.see.much, drain
+      respond bricks, cellar.bricks
+      respond slab, cant.see.properly, slab
+      proceed
+   fin
+#    respond drain, drain.out.of.reach
+#    ifkey throw
+#       and
+#       not
+#    ifnear dwarf
+#       call throw.it.at.orb
+#    fin
+   ifkey go
+      or
+   ifeq status, 1
+      move up, steps, half.stairs
+      respond cellar, in, no.go.portcullis
+   fin
+   ifany steps, cellar
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#139
+AT curtain.entrance  # checked
+   ifkey look
+      respond steps, well.worn.steps
+      respond entrance, curtained.opening, entrance
+      respond curtains, its.a.curtain
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move down, basement
+      move up, pantry
+      move nw, in, inward, soft, entrance, curtains, soft
+   fin
+   ifany steps, entrance
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#140
+AT causeway.west # checked
+   ifkey look
+      respond down, bottom, riverbed, streambed, distant.streambed
+      respond causeway, stone.causeway
+      respond stream, no.stream
+      respond mist, this.is.mist
+      proceed
+   fin
+   ifkey jump
+      ifany down, stream, streambed, bottom
+         or
+      ifeq status, 1
+         say on.streambed
+         goto ylem
+         call coroner
+      fin
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move east, cross, across, over, causeway
+#       move west, north, south, nw, sw, swirling.mist # from 770
+      move north, south, ne, se, swirling.mist
+      ifany down, streambed, bottom
+         set context, q.streambed
+         quip down.to.streambed?
+      fin
+   fin
+   ifany mist
+      flag context, arg2.here
+   fin
+   ifany bottom, streambed
+      flag context, arg2.distant
+   fin
+#
+#=====================================================================
+#
+#141
+# AKA causeway.east
+AT causeway # checked
+   ifkey look
+      respond down, bottom, streambed, distant.streambed
+#       respond gap, stream, no.stream
+      respond mist, this.is.mist
+      respond causeway, stone.causeway
+      proceed
+   fin
+   ifkey jump
+      ifeq status, 1
+         or
+      ifany down, bottom, stream, streambed
+         say on.streambed
+         goto ylem
+         call coroner
+      fin
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move over, west, cross, across, causeway, causeway.west
+      move south, se, sw, reservoir, reservoir
+      ifany down, streambed, bottom
+         set context, q.streambed
+         quip down.to.streambed?
+      fin
+   fin
+   ifany mist, causeway
+      flag context, arg2.here
+   fin
+   ifany bottom, streambed
+      flag context, arg2.distant
+   fin
+#
+#=====================================================================
+#
+# at storeroom
+#    fakearg door, door2
+#    ifkey look
+#       respond passage, tunnel, corridor, shelf.passage
+#       respond door2, door2.inside
+#       respond ceiling, up, its.a.ceiling, c.storeroom
+#       respond wall, shelf.wall
+#       proceed
+#    fin
+#    ifany up, climb
+#       ifkey shelf
+#          smove shelves.west, climb.shelves
+#       fin
+#       ifkey ladder
+#          or
+#       ifeq status,1
+#          move shelves.east
+#       fin
+#    fin
+#    ifkey shelf
+#       flag context, arg2.here
+#       proceed
+#    fin
+#    ifkey go, door2
+#       fakearg door2, out
+#    fin
+#    ifkey go
+#       or
+#    ifeq status, 1
+#       ifany out, west, landing
+#          ifeq door2, closed
+#             quip door.in.the.way, west
+#          fin
+#          set door2, opened
+#          set tower.upper.landing, opened
+#          move tower.upper.landing
+#       fin
+#    fin
+#    ifany passage, tunnel, corridor
+#       flag context, arg2.here
+#    fin
+#
+#=====================================================================
+#
+#142
+AT dungeon.exit   # checked
+   ifkey look
+      ifany tunnel, passage, corridor
+         set status, 1
+      fin
+      respond hole, dungeon, no.see.up.there
+      proceed
+   fin
+   ifkey climb
+      and
+   ifany out, up, hole
+      set status, 1
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move down, south, passage, well.bottom
+      ifany up, out, hole, dungeon
+         smove dungeon, back.to.dungeon
+      fin
+   fin
+   ifany passage, tunnel, corridor, hole
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#143
+AT well.bottom # checked
+   ifkey look
+      respond up, patch, light, daylight, well, up.well.view
+      respond passage, tunnel, corridor, dark.exit, passage
+      respond wall, well.wall
+      ifkey chamber
+         set status, 1
+      fin
+      proceed
+   fin
+   respond well, you.are.there
+   ifkey climb
+      set status, 1
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move north, passage, tunnel, corridor, dungeon.exit
+      ifany out, up, climb
+         smove building, well.climb
+      fin
+      respond chamber, well, you.are.there
+   fin
+   ifany well, wall, daylight, patch, passage, tunnel, corridor
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#144
+AT crypt  # checked
+#    ifkey steps
+#       fakearg steps
+#    fin
+#    ifkey monocle
+#       and
+#    ifgt coffin, closed
+#       quip no.monocle
+#    fin
+   ifkey look
+#       ifany in, thing, something    # I give up. Let's cater for "look in coffin".
+#          ifgt coffin, closed
+#             ifkey in
+#                fakearg in, coffin
+#             otherwise
+#             ifkey thing
+#                fakearg thing, coffin
+#             else
+#                fakearg something, coffin
+#             fin
+#          else
+#             quip open.it.first, coffin
+#          fin
+#       fin
+      respond ceiling, up, its.a.ceiling, c.crypt
+   fin
+#    ifkey lid
+#       respond look, coffin.lid
+#       fakearg lid, coffin
+#       ifany lift, pull
+#          call open
+#       fin
+#    fin
+   respond tombs, just.a.fixture, tombs
+#    ifkey crucifix
+#       and
+#    ifnear vampire
+#       and
+#    ifflag status, light.here
+#       ifkey wave
+#          flag quips, crucifix.waved
+#          iflt vampire, asleep
+#             quip vampire.dont.care
+#          else
+#             quip crucifix.no.effect
+#          fin
+#       else
+#          ifany look, get, fetch
+#             proceed
+#          fin
+#          ifkey drop
+#             drop crucifix
+#             say you.do.it
+# #            say you.do, arg1
+# #            say it.is, arg2
+#             sub invct, 1
+#             quit
+#          fin
+#          ifflag quips, crucifix.waved
+#             ifkey give
+#                proceed
+#             fin
+#             flag context, arg2.here
+#             proceed
+#          else
+#             say blank
+#             quip wave.crucifix?
+#          fin
+#       fin
+#    fin
+   ifkey look
+      ifkey crypt
+         set status, 1
+      fin
+      respond dust, dusty.place
+      respond column, slab, stone.spiral, 1
+#       respond cobwebs, dull.stuff, 1
+      proceed
+   fin
+#    ifkey climb stairs
+#       set status, 1
+#    fin
+   ifkey go
+      or
+   ifeq status, 1
+      ifany up, out
+#          ifnear vampire, content
+#             call vampires.gift, 1
+#          fin
+         move chapel
+      fin
+   fin
+   ifany column, slab, tombs, dust, web
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#145
+AT top.of.chapel  # checked
+   local weapon
+# 
+#    fakearg steps, stairs
+#    fakearg fire, alarm   # Allow for "get fire [alarm]" etc...
+   ifkey box
+      and
+   ifnear box
+         proceed
+   fin
+#    fakearg box, alarm
+#    ifkey alarm
+#       and
+#       not
+#    ifflag alarm, seen
+#       set top.of.chapel, 1
+#       apport alarm, here
+#       flag alarm, seen
+#       set alarm, 1         
+#       say oh.that.alarm
+#    fin
+#    ifany alarm, box
+#       and
+#    ifhere alarm
+#       respond read, cant.do.that, read
+#       ifkey look
+#       else
+#          ifany kill, hit
+#             set weapon, none
+#             ifhave trident
+#                lda weapon, trident
+#             otherwise
+# #             ifhave sword
+# #                lda weapon, sword
+#             otherwise
+#             ifhave axe
+#                lda weapon, axe
+#             fin
+#             ifne weapon, none
+#                quip no.break.alarm, weapon
+#             fin
+#             quip leave.alarm.alone
+#          fin
+#          quip alarm.out.of.reach
+#       fin
+#    fin
+#    ifkey trident
+#       and
+#    ifhave trident
+#       and
+#    ifany wave, throw
+#       and
+#    ifnear alarm
+#       and
+#       not
+#    ifnear dwarf
+#       quip no.damage.alarm, arg2
+#    fin
+#    ifany drawings, something, box
+#       ifgt alarm, 0
+#          ifkey something
+#             proceed
+#          fin
+#          ifeq status, 1
+#             set word.ptr, arg1
+#          else
+#             set word.ptr, arg2
+#          fin
+#          quip i.dont.see, word.ptr
+#       fin
+#       set status, 2
+#       lda arg1, look
+#       lda arg2, alarm
+#    fin
+#    ifkey look
+#       ifkey chamber
+#          set status, 1
+#       fin
+#       respond stairs, well.worn.steps
+#       respond opening, dark.exits, passage
+#       ifany doorway, arch
+#          ifhere alarm
+#             quip arched.doorway
+#          else
+#             fakearg doorway, alarm
+#          fin
+#       fin
+#       ifany alarm, shapes
+#          set top.of.chapel, 1
+#          describe alarm
+#          apport alarm, here
+#          flag alarm, seen
+#          set alarm, 1         
+#          quit
+#       fin               
+#       proceed
+#    fin
+   ifkey go
+      or
+   ifeq status, 1
+      move down, chapel
+      move north, south.attic
+#       move south, doorway, arch, in, tower.base
+      move west, pantry, pantry
+   fin
+   ifany drawings, something, opening, arch, doorway
+      flag context, arg2.here
+   fin
+   lda throw.text, throw.downstairs
+   lda throw.here, chapel
+#
+#=====================================================================
+#
+at south.attic  # checked
+   ifkey look
+      ifkey attic
+         set status, 1
+      fin
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move south, top.of.chapel
+      move north, attic, north.attic
+      move sw, pantry, pantry
+   fin
+   ifany attic
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#146
+AT north.attic  # checked
+   ifkey look
+      ifkey attic
+         set status, 1
+      fin
+      respond passage, tunnel, corridor, dark.exit, passage
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move south, out, south.attic
+      move north, in, passage, den
+   fin
+   ifany passage, tunnel, corridor
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#147
+AT den  # checked
+#    ifany something, corner
+#       and
+#    ifeq seal, 0
+#       fakearg corner, seal
+#       fakearg something, seal
+#    fin
+   call default.read, note
+   ifany note, notice, label, message, inscription
+      respond read, look, new.premises
+      quip leave.it.alone, note
+   fin
+   ifkey label
+      respond look, read, its.swag
+      respond get, leave.it.alone, label
+      ifgt status, 1
+         flag context, arg2.here
+         proceed
+      else
+         flag status, pls.clarify
+         quip do.what?, building
+      fin
+   fin
+   ifkey look
+      respond shelf, its.empty, shelf
+      ifkey den
+         set status, 1
+      fin
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move south, out, north.attic
+#       move out, attic
+      respond den, you.are.there
+   fin
+   ifany note, notice, label, message, inscription, shelf, den
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#148
+AT pantry  # checked
+   ifkey hole
+      ifany look, enter
+         set tiny.mouse, 1
+         quip mouse.hole
+      fin
+      quip hah!
+   fin
+   ifkey look
+      respond stream, corner, water, just.a.trickle
+      respond shelves, just.a.fixture, arg2
+      respond steps, well.worn.steps
+      respond arch, arch.with.steps
+      respond tunnel, corridor, passage, dark.exits, passage
+      respond wall, damp.walls
+      ifkey pantry
+         set status, 1
+      fin
+      proceed
+   fin
+   ifkey fill
+      and
+   ifany chalice
+      and
+   ifhave arg2, emptied
+      quip cant.scoop, arg2
+   fin
+   ifhave bottle, emptied
+#       or
+#    ifhave flask, emptied
+   else
+      ifkey get, water
+#          ifhave bucket, emptied
+#             quip cant.scoop, bucket
+#          otherwise
+         ifhave chalice
+            quip cant.scoop, chalice
+         fin
+      fin
+   fin          
+   ifkey go
+      or
+   ifeq status, 1
+      move east, top.of.chapel
+      move ne, south.attic
+      move north, down, steps, curtain.entrance
+      move west, quarters
+      ifkey mouse
+         and
+      ifeq tiny.mouse, 1
+         quip mouse.hole
+      fin
+      respond pantry, you.are.there
+      respond pantry, need.a.direction
+   fin
+   ifany steps, stream, pantry, shelves, corner, archway, arch, hole
+      flag context, arg2.here
+   fin
+   ifany passage, tunnel, corridor, wall
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#149
+AT unsafe  # checked
+   ifkey look
+      respond timber, wood, decaying.timber
+      respond fall, rockfall, sagging.walls
+      respond roof, ceiling, unsafe.roof, 0
+      respond fracture, opening, hole, wall, slit, narrow.exit, fracture
+      ifany passage, corridor, tunnel
+         set status, 1
+      fin
+      proceed
+   fin
+   ifany west, crack, hole, slit
+      and
+   ifkey in
+      set status, 1
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move south, anteroom
+      move north, very.unsafe
+      ifany passage, corridor, tunnel
+         call follow.it, anteroom, south, very.unsafe, north
+      fin
+      ifany west, crack, hole, slit, opening
+         call nothing.big, crack.too.narrow, fracture
+         move low.room
+      fin
+   fin
+   ifany corridor, passage, tunnel, timber, wood, rockfall
+      flag context, arg2.here
+   fin
+   ifany opening, hole, wall, fracture, slit
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#150
+AT very.unsafe  # checked
+   ifkey look
+      respond timber, rotted.timber
+      respond passage, corridor, tunnel, dark.exit, passage
+      respond fall, rockfall, solid.blockage
+      respond roof, ceiling, unsafe.roof, 1
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move south, out, passage, corridor, tunnel, unsafe
+   fin
+   ifany corridor, passage, tunnel, timber
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#151
+AT low.room # checked - may need more verification - btb
+   ifany drink, pour
+      proceed
+   fin
+   respond water, no.collect.water
+   ifkey look
+      respond floor, slippery.floor
+      respond roof, ceiling, water, wet.ceiling
+      respond crack, hole, slit, out, narrow.exit, slit
+      proceed
+   fin
+   ifkey fill
+      and
+   ifany bottle
+      quip no.collect.water
+   fin
+   ifkey water
+      and
+   ifany get, drink
+      quip no.collect.water
+   fin
+   ifany crack, hole, opening, slit
+      and
+   ifany in, out
+      or
+   ifkey climb, down
+      set status, 1
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move west, bones.room
+      move upstream, bones.room
+      move down,d phoney.shaft
+#       ifkey down
+#          ifflag rats, special1
+#             move in.shaft
+#          fin
+#          move phoney.shaft
+#       fin
+      ifany up, east, crack, hole, slit, out
+         call nothing.big, crack.too.narrow, slit
+         move unsafe
+      fin
+   fin
+   ifany water, crack, hole, slit, out
+      flag context, arg2.here
+   fin
+   lda throw.here, sea.view
+   lda throw.text, down.the.shaft
+   set throw.it, true
+   set drop.here, throw.here
+   set drop.text, throw.text         
+#
+#=====================================================================
+#
+#101  # checked
+AT mazea.114
+   ifkey go
+      or
+   ifeq status, 1
+      move se, out, mazea.84
+   fin
+#
+#=====================================================================
+#
+#152
+AT bones.room  # checked
+   ifany drink, pour
+      proceed
+   fin
+   respond water, water.drops
+#    respond bones, bones.ugh
+#    ifkey droppings
+#       ifkey get
+#          ifflag beanstalk.bottom, been.here
+#             quip droppings.no.good, 1
+#          fin
+#          quip droppings.no.good, 0
+#       fin
+#       respond look, droppings.large
+#       flag context, arg2.here
+#       proceed
+#    fin
+   ifkey look
+      respond passage, tunnel, corridor, dark.exit, passage
+#       respond bones, marks, gnawed.bones
+      ifkey cave
+         set status, 1
+      fin
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move east, down, out, passage, tunnel, corridor, low.room
+      respond cave, you.are.there
+   fin
+   ifany passage, tunnel, corridor, cave
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#153
+AT phoney.shaft  # checked  but this was an area that changed, so needs
+# review - btb
+   ifkey look
+      respond down, water, liquid, its.sewage
+      respond sewage, look.sewage
+#       respond wall, slime, yucky.slime
+      ifkey shaft
+         set status, 1
+      fin
+      proceed
+   fin
+   ifkey climb, shaft
+      and
+   ifany up, down, shaft
+      or
+   ifkey climb, shaft
+      or
+   ifkey jump, down
+      set status, 1
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+#       ifany down, jump, shaft, shaft
+#          say wheee...splash
+#          say glug.glug.glug...
+#          goto sea.view
+#          call coroner
+#       fin
+#       ifany up, out, back, wait, climb
+#          flag rats, special1
+#          set rats, 0
+#          random tide, 4
+# #          ifkey wait
+# #             smove in.shaft, tide.recedes
+# #          fin
+#          move low.room
+#       fin
+      move upward, up, out, low.room
+      move jump, down, culvert
+   fin
+   ifany shaft, sewage, liquid
+      flag context, arg2.here
+   fin
+   lda throw.here, sea.view
+   lda throw.text, into.sewage
+   set drop.here, throw.here
+   set drop.text, throw.text
+#
+#=====================================================================
+#
+#154
+AT culvert   # checked
+   ifkey look
+      respond bricks, wall, slimey.bricks
+#       respond wall, slime, yucky.slime
+      ifkey culvert
+         set status, 1
+      fin
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move north, sea.view
+      move south, culvert.south
+      ifkey culvert
+         call follow.it, sea.view, north, culvert.south, south
+      fin
+   fin
+   ifany sewage, bricks, culvert
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#155
+AT sea.view  # checked
+   call default.read, inscription
+   ifnear spoon
+      and
+   ifflag spoon, special1
+   else
+      call fake.note, same.as.before, inscription
+   fin
+#    respond grill, grill.solid
+   ifkey look
+      respond bricks, wall, slimey.bricks
+#       respond wall, slime, yucky.slime
+      respond inscription, tide.level
+      respond tunnel, passage, corridor, culvert, corridor, culvert.tunnel
+      respond sea, cant.see.much, sea
+      respond roof, ceiling, culvert.roof
+      respond line, tide.line
+#       ifkey pieces
+#          and
+#          not
+#       ifnear pieces
+#          quip sewage.debris
+#       fin
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move south, inward, culvert, tunnel, passage, corridor, culvert
+      respond sea, grill.solid
+   fin
+   ifany sewage, culvert, bricks, inscription
+      flag context, arg2.here
+   fin
+   ifany passage, tunnel, corridor, sea, line, roof, ceiling
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#156
+AT culvert.south  # checked
+   ifkey rats
+      and
+   ifgt status, 1
+      call rats.stuff
+   fin
+   ifkey look
+      respond bricks, wall, slimey.bricks
+#       respond wall, slime, yucky.slime
+      respond pipe, sewer.pipe, 1
+      respond roof, ceiling, culvert.roof
+      ifkey culvert
+         set status, 1
+      fin
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move north, culvert, culvert
+      move sw, sewer.4
+      move west, nw, sewer.5
+      move east, south, se, sewer.1
+      respond pipe, need.a.direction
+   fin
+   ifany rats, pipe, sewage, bricks, culvert, roof, ceiling
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#157
+AT sewer.1 # checked
+   ifkey look
+      respond pipe, sewer.pipe, 1
+#       respond wall, slime, yucky.slime
+#       ifkey junction
+#          set status, 1
+#       fin
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move north, culvert.south
+      move se, sw, sewer.2
+#       respond junction, you.are.there
+      respond pipe, need.a.direction
+   fin
+   ifany pipe, sewage
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#158
+AT sewer.2  # checked
+   ifkey look
+      respond pipe, sewer.pipe, 1
+#       respond wall, slime, yucky.slime
+#       ifkey junction
+#          set status, 1
+#       fin
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move north, sewer.1
+      move south, se, sewer.3
+      respond pipe, need.a.direction
+#       respond junction, you.are.there
+   fin
+   ifany pipe, sewage
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#159
+AT sewer.3  # checked
+   ifkey look
+      respond pipe, sewer.pipe, 0
+#       respond wall, slime, yucky.slime
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move north, out, pipe, sewer.2
+   fin
+   ifany pipe, sewage
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#160
+AT sewer.4  # checked
+#    local rag.loc
+# 
+   ifkey look
+      respond stream, its.tears.are.wet, stream
+#       respond wall, slime, yucky.slime
+      respond fracture, large.fracture
+      respond pipe, sewer.pipe, 2
+#       ifkey junction
+#          set status, 1
+#       fin
+      proceed
+   fin
+   ifany go, crawl
+      or
+   ifeq status, 1
+      move ne, pipe, culvert, culvert.south
+      ifany up, in, out, crawl, fracture
+         set hint.time, 1
+#          locate rag.loc, rags
+#          ifinrange rag.loc, culvert, sewer.5
+#             apport rags, sea.view
+#          fin
+#          smove stream.maze.entrance, out.of.sewer
+      move crawl, inward, upward, crack, stream.maze
+      fin
+#       respond junction, you.are.there
+   fin
+   ifany stream, pipe, sewage, fracture
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#161
+AT sewer.5  # checked
+   ifkey look
+      respond pipe, sewer.pipe
+#       respond wall, slime, yucky.slime
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move east, out, culvert, culvert.south
+   fin
+   ifany pipe, sewage
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+# at stream.maze.entrance
+#    ifkey stream
+#       call stream.stuff
+#       quip too.many.streams
+#    fin
+#    ifkey look
+#       respond passage, tunnel, corridor, dark.exits, passage
+#       proceed
+#    fin
+#    ifkey go
+#       or
+#    ifeq status, 1
+#       respond passage, tunnel, corridor, need.a.direction
+#       ifany down, downstream
+#          flag rats, special2
+#          move sewer.4
+#       fin
+#       ifany north, ne, east, se, south, sw, west, nw, up, upstream
+#          set stream.maze, 0
+#          move stream.maze
+#       fin
+#    fin
+#    ifany passage, tunnel, corridor
+#       flag context, arg2.here
+#    fin
+# #
+#=====================================================================
+#
+AT SHAFT   # checked - but how do I get here ? ! - btb
+   MOVE UPWARD, LOW.ROOM
+   MOVE JUMP, D, CULVERT
+# 
+#=====================================================================
+#
+#162
+AT stream.maze # checked
+   ifkey stream
+      call stream.stuff
+      quip too.many.streams
+   fin
+   ifkey look
+      respond passage, tunnel, corridor, dark.exits, passage
+      proceed
+   fin
+##### Replacing all of the following
+#    ifkey go
+#       or
+#    ifeq status, 1
+#       respond passage, tunnel, corridor, need.a.direction
+#       ifany stream, up, upstream
+#          and
+#          not
+#       ifflag rats, special2
+#          iflt stream.maze, 4
+#             call hide.things
+#             add stream.maze, 1
+#             move stream.maze
+#          fin
+#          set stream.maze, 0
+#          call dump.things, sea.view
+#          move jumble
+#       fin
+#       ifany down, downstream
+#          chance 15
+#             move stream.maze.entrance
+#          fin
+#       fin
+#       ifany north, south, east, west, ne, se, nw, sw, 
+#          or
+#       ifany upstream, up, down, downstream
+#          call hide.things
+#          move stream.maze
+#       fin
+#    fin
+#    ifany passage, tunnel, corridor
+#       flag context, arg2.here
+#    fin
+####################
+   chance 60
+      move e, w, n, s, up, upward, bedquilt
+   fin
+   move e, w, n, s, upward, up, large.room
+   move d, downstream, stream.maze
+#
+#=====================================================================
+#
+#163
+AT bare.cavern # checked
+   ifkey look
+      respond opening, wall, hole, curtained.opening, opening
+      respond curtains, its.a.curtain
+      respond passage, tunnel, corridor, dark.exit, passage
+      ifkey cavern
+         set status, 1
+      fin
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move west, out, opening, hole, curtains, soft
+      move north, passage, low.passage
+      respond cavern, you.are.there
+   fin
+   ifany opening, hole, tunnel, corridor, passage, cavern
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#164
+AT low.passage  # checked
+   ifkey look
+      respond cavern, cant.see.much, cavern
+      respond wall, ceiling, floor, rock, polished.passage
+      ifany tunnel, passage, corridor
+         set status, 1
+      fin
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move south, cavern, bare.cavern
+      move north, large.cavern
+      ifany tunnel, passage, corridor
+         call follow.it, bare.cavern, south, large.cavern, north
+      fin
+   fin
+   ifany passage, tunnel, corridor, cavern
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#165
+AT large.cavern  # checked
+   ifkey look
+      respond roof, ceiling, in.shadow, arg2
+      respond mist, this.is.mist
+      respond opening, hole, misty.opening
+      respond passage, tunnel, corridor, dark.exit, passage
+      ifkey cavern
+         set status, 1
+      fin
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move sw, passage, low.passage
+      move north, mist, opening, hole, swirling.mist
+      respond cavern, you.are.there
+   fin
+   ifany mist, cavern, passage, roof, hole, opening
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#166
+AT swirling.mist  # checked
+   ifkey look
+      proceed
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      chance 20
+         move, se, s, sw, large.cavern
+       fin
+       chance 20
+          move north, ne, nw, causeway.west
+        fin
+        move e, w, n, s, ne, se, sw, nw, swirling.mist
+#       ifany north, ne, east, se, south, sw, west, nw
+# #          call hide.things
+#       fin
+# #       ifany east, west
+# #          call lost.in.mist
+# #          quit
+# #       fin
+#       ifany south, se, sw
+#          chance 33
+# #             call dump.things, sword.place
+#             move large.cavern
+#          fin
+# #          call lost.in.mist
+#       fin
+#       ifany north, ne, nw
+#          chance 33
+# #             call dump.things, sword.place
+#             move causeway.west
+#          fin
+# #          call lost.in.mist
+#       fin
+   fin
+   ifany mist
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#167
+AT forest.1  # checked
+#    ifkey look
+#       respond path, ravine, too.far.to.see, arg2
+#       proceed
+#    fin
+   ifkey go
+      or
+   ifeq status, 1
+#       ifhave sunstone
+#          ifany path, ravine
+#             lda direction, sw
+#          fin
+#          call consult.sunstone, direction
+#       fin
+#       move north, ne, west, nw, dark.forest
+#       move east, forest.5
+#       move se, forest.4
+#       move south, sw, ravine, path
+      MOVE VALLEY, EAST, D, VALLEY
+      CHANCE 50
+         MOVE FOREST, FORWARD, NORTH, FOREST.1
+      FIN
+      MOVE FOREST, FOREST.2
+      MOVE WEST, SOUTH, FOREST.1
+   fin
+#    ifany path, ravine
+#       flag context, arg2.here
+#    fin
+#
+#=====================================================================
+#
+#168
+AT forest.2  # checked
+#    ifkey look
+#       respond path, ravine, too.far.to.see, arg2
+#       proceed
+#    fin
+   ifkey go
+      or
+   ifeq status, 1
+#       ifhave sunstone
+#          ifkey track
+#             lda direction, south
+#          otherwise
+#          ifany path, ravine
+#             lda direction, east
+#          fin
+#          call consult.sunstone, direction
+#       fin
+#       move south, track
+#       move ne, east, path, ravine, path
+#       move se, hill
+#       move sw, west, nw, dark.forest
+      move road, n, road
+      move valley, east, west, d, valley
+      move forest, s, forest.1
+   fin
+#    ifany path, ravine
+#       flag context, arg2.here
+#    fin
+#
+#=====================================================================
+#
+#169
+AT ne.repository # checked
+   call default.read, sign
+   call fake.note, nothing.more.to.read, sign
+#    ifkey knife
+#       respond get, look, no.steal.knives
+#    fin
+   ifkey dwarf
+     ifkey wake
+        say dwarf.wakes
+        call coroner
+     fin
+     quip no.wake.dwarves
+   fin
+   ifkey look
+      respond torch, massive.torches
+      respond ceiling, up, its.a.ceiling, c.repository
+#       ifkey repository
+#          set status, 1
+#       fin
+      proceed
+   fin
+   ifkey get
+      respond plant,  beanstalk roots.too.deep, arg2
+      respond torch, torches.too.high
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      move sw, sw.repository
+#       respond repository, you.are.there
+   fin
+   ifany torch, dwarf
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#
+#170
+AT sw.repository  # checked - but needs to be re-verified as part of endgame 
+# btb
+   ifkey look
+      ifkey dynamite
+         and
+         not
+      ifflag dynamite, stealable
+         fakearg dynamite, rods
+      fin
+      respond ceiling, up, its.a.ceiling, c.repository
+      respond pit, snake.pit
+      respond torch, massive.torches
+#       ifkey repository
+#          set status, 1
+#       fin
+      proceed
+   fin
+   ifkey get, torch
+      quip torches.too.high
+   fin
+   ifkey pit
+      and
+   ifany climb, down
+      set status, 1
+   fin
+   ifkey go
+      or
+   ifeq status, 1
+      ifkey ne
+#          ifflag dark.hole, been.here
+#             move blasted.repository
+#          fin
+         move ne.repository
+      fin
+      respond repository, you.are.there
+      respond d, cant.pass.grate
+      respond pit, no.go.snake.pit
+   fin
+   ifany pit, torch
+      flag context, arg2.here
+   fin
+#
+#=====================================================================
+#

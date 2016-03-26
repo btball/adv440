@@ -1,0 +1,24 @@
+# Adventure440
+# Copyleft Mike Arnautov 1984-2016.
+#
+Name     Adv440
+Version  2.13
+Date     21 Feb 2016
+Author   Brian Ball
+Style    A-code 12
+#
+include  defs.acd
+include  vars.acd
+include  words.acd
+include  text.acd
+include  places.acd
+include  objects.acd
+include  moretext.acd
+include  procs.acd
+include? debug.acd   # Conditional include
+include  at.acd
+include  actions.acd
+include  init.acd
+include  repeat.acd
+#
+############# That's it, folks! #############
