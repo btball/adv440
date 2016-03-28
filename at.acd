@@ -296,17 +296,15 @@ AT building  # checked
 #    ifany road, out, west
 #       call try.dir, west, road
 #    fin
-   move enter, out, outdoor, west, road
-   ifkey go, building
+   checkpoint # Debug - btb
+   ifany go, building, in
       quip already.inside, building
    fin
-   ifany in
-      ifkey building
-         or
-      ifeq status, 1
-         quip already.inside, building
-      fin
-   fin
+   move enter, out, outdoor, west, road
+   checkpoint # Debug - btb
+#    ifkey in
+#       quip already.inside, building
+#    fin
    ifany xyzzy, plugh
       and
    iflt  stage, exits.barred      # Is the cave open?

@@ -16,7 +16,7 @@ mode they were in 440
 4. Pirate still seems bugged - I'll need to work with Mike Arnautov on this.  I am
 not sure if it's my bug or his.
 
-5. A bug when I am in the building and say "in" - I am then taken back to the path!
+5. A bug when I am in the building and say "in" - I am then taken back to the path! (fixed)
 
 II. Testing
 

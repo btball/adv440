@@ -3254,7 +3254,6 @@ proc dragon.slayer
             fin
          fin
       fin
-#       apport teeth, here
       apport rug, here
       apport dragon, here
 #       choose dragtime, 0, 5   # No rotting dragon in 440
@@ -3262,14 +3261,9 @@ proc dragon.slayer
       unflag dragon, schizoid
 #       set rug, unrolled
       say dragon.vanquished
-      say dragon
-#      say rug
+#       say dragon
       quip rug
-#       quip teeth
-      checkpoint   # debug - btb
-#      quit  # remember quip implies quit! btb
    fin
-   checkpoint # debug - btb
    ifany quit, no, n
       restore command, text.ptr
       say use.a.weapon, arg1
@@ -4407,6 +4401,9 @@ proc dwarf.attack
     ifgt dattack, 0
       say knives.thrown, dattack    # Incoming!
       ifgt dstick, 0
+         IFEQ DATTACK, 1
+            SET DSTICK, 0
+         FIN
          say knives.got.you, dstick # Pin-cushion time!
          set daggro, 2              # Dwarves no longer mad (if they were)
          call coroner
@@ -4474,12 +4471,12 @@ proc weaponry    # Handle attacks with weapons
          add modifier, 2
          mult modifier, 15
          add luck, modifier
-         ifany axe, swing
-            ifkey axe, swing
-            else
-               add luck, 15
-            fin
-         fin
+#          ifany axe, swing
+#             ifkey axe, swing
+#             else
+#                add luck, 15
+#             fin
+#          fin
          chance luck
             chance 5
                and
@@ -7729,6 +7726,9 @@ proc new.dloc, dn
     locate dloc, dcur
     set result, dloc
     ifhere dcur
+      and
+      not
+    ifflag there, no.dwarf
       return
     fin
   fin
@@ -8160,6 +8160,9 @@ proc move.npcs
     ifeq dloc, there        # Is he THERE?
        and
        not
+    ifflag there, no.dwarf
+       and
+       not
     ifflag here, no.dwarf   # Is he allowed HERE? Follow the player!
        set dnew, here       # Note his new location
     otherwise
@@ -8189,7 +8192,7 @@ proc move.npcs
         ifeq dnew, dloc       # Has the dwarf moved?
            and
            not
-        ifany get, drop, inventory
+        ifany get, drop, inventory, blow
           add dattack, 1      # Non-moving dwarves attack
           random temp, 10
           iflt temp, daggro
@@ -8374,9 +8377,8 @@ proc pirate.stuff
   fin
   ifeq rest, 1
     or
-  ifgt swag, 0    # Changed from 1 ... btb
-#     apport pirate, mazea.114
-    apport pirate, limbo
+  ifge swag, 1     
+    apport pirate, ylem
     apport chest, mazea.114
     ifeq rest, 1
       say pirate.runs

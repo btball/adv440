@@ -253,24 +253,24 @@ init
     flag stable, no.dwarf
     flag top.of.chapel, no.dwarf
 
-#   flag cobbles, no.dwarf
-#   flag alcove, no.dwarf
-#    flag sw.of.chasm, no.dwarf
-#    flag ne.of.chasm, no.dwarf
-#    flag corridor, no.dwarf
-#    flag plover, no.dwarf
-#    flag dark, no.dwarf
-#    flag fork, no.dwarf
-#    flag warmjunctn, no.dwarf
-#    flag breathtaker, no.dwarf
-#    flag boulder.chamber, no.dwarf
-#    flag limestone, no.dwarf
-#    flag barren, no.dwarf
-#    flag bear.room, no.dwarf
-#    flag mazea.114, no.dwarf
-#    flag east.pit, no.dwarf
-#    flag west.pit, no.dwarf
-#    flag streampit, no.dwarf
+   flag cobbles, no.dwarf
+   flag alcove, no.dwarf
+   flag sw.of.chasm, no.dwarf
+   flag ne.of.chasm, no.dwarf
+   flag corridor, no.dwarf
+   flag plover, no.dwarf
+   flag dark, no.dwarf
+   flag fork, no.dwarf
+   flag warmjunctn, no.dwarf
+   flag breathtaker, no.dwarf
+   flag boulder.chamber, no.dwarf
+   flag limestone, no.dwarf
+   flag barren, no.dwarf
+   flag bear.room, no.dwarf
+   flag mazea.114, no.dwarf
+   flag east.pit, no.dwarf
+   flag west.pit, no.dwarf
+   flag streampit, no.dwarf
 #    flag faces, no.dwarf
 #    flag by.figure, no.dwarf
 #    flag plain.1, no.dwarf
@@ -305,24 +305,24 @@ init
 #    flag insafe, no.dwarf
 #    flag glassy, no.dwarf
 #    flag cellar, no.dwarf
-#    flag web.maze.4, no.dwarf
+   flag web.maze.4, no.dwarf
 #    flag dank.cave, no.dwarf
-#    flag quarters, no.dwarf
-#    flag dungeon, no.dwarf
-#    flag dungeon.exit, no.dwarf
-#    flag swirling.mist, no.dwarf
-#    flag culvert, no.dwarf
-#    flag culvert.south, no.dwarf
-#    flag sea.view, no.dwarf
-#    flag sewer.1, no.dwarf
-#    flag sewer.2, no.dwarf
-#    flag sewer.3, no.dwarf
-#    flag sewer.4, no.dwarf
-#    flag sewer.5, no.dwarf
+   flag quarters, no.dwarf
+   flag dungeon, no.dwarf
+   flag dungeon.exit, no.dwarf
+   flag swirling.mist, no.dwarf
+   flag culvert, no.dwarf
+   flag culvert.south, no.dwarf
+   flag sea.view, no.dwarf
+   flag sewer.1, no.dwarf
+   flag sewer.2, no.dwarf
+   flag sewer.3, no.dwarf
+   flag sewer.4, no.dwarf
+   flag sewer.5, no.dwarf
 #    flag in.shaft, no.dwarf
-#    flag phoney.shaft, no.dwarf
-#    flag bones.room, no.dwarf
-#    flag low.room, no.dwarf
+   flag phoney.shaft, no.dwarf
+   flag bones.room, no.dwarf
+   flag low.room, no.dwarf
 #    flag vestry, no.dwarf
 #    flag sword.place, no.dwarf
     flag limbo, no.dwarf
@@ -331,17 +331,17 @@ init
     flag canyon, no.dwarf
     flag bird.chamber, no.dwarf
     flag pit, no.dwarf
-#    flag den, no.dwarf
+   flag den, no.dwarf
 #    flag new.den, no.dwarf
-#    flag beams, no.dwarf
+   flag beams, no.dwarf
 #    flag platform, no.dwarf
 #    flag stream.maze.entrance, no.dwarf
-#    flag stream.maze, no.dwarf
+   flag stream.maze, no.dwarf
 #    flag crypt, no.dwarf
 #    flag wrong.venue, no.dwarf
 #    flag valuers, no.dwarf
 #    flag small.chamber, no.dwarf
-#    flag storeroom, no.dwarf     # So that nicked objects do not get nicked.
+   flag storeroom, no.dwarf     # So that nicked objects do not get nicked.
 #    flag hidey.hole, no.dwarf    # Ditto for things lost in the mist.
 #
 # Specify rooms with only 1 exit.

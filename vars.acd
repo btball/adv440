@@ -21,7 +21,6 @@ variable losses, actual.score
 # variable codex.reward
 variable faked.object
 variable daggro, dattack, dstick
-variable spare..v..01, spare..v..02, spare..v..03, spare..v..04
 variable status, admin, context
 variable lamplife
 variable invct
@@ -35,7 +34,6 @@ variable hint.time
 # variable strength, dragtime, lastclock
 variable strength, lastclock  # no dragtime in 440 - no rotting dragon carcass 
 variable escape
-
 variable west.count
 variable tide
 variable recent.event
@@ -63,3 +61,4 @@ variable full.value
 # variable dwarven
 variable dloc, dcur, dold
 array dthere 6
+variable index

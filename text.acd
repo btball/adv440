@@ -148,8 +148,10 @@ TEXT KNIVES.THROWN
 TEXT KNIVES.MISS
     [/It misses/They miss] you!
 #
+# TEXT KNIVES.GOT.YOU
+#     [/It/One of them] gets you!
 TEXT KNIVES.GOT.YOU
-    [/It/One of them] gets you!
+    [It/$ of them] get[s/s/] you!
 #
 # TEXT FIRST.DEFLECTOR
 #     Your magic ring shoots out a bolt of lightning that splinters
@@ -563,15 +565,18 @@ TEXT random URRP
     Thank you, it was [delicious/wonderful/just what the doctor
     ordered/most refreshing]!
 #
-TEXT assigned SLURP
-    You have taken a drink from the [stream. The water tastes strongly of
-    minerals, but is not unpleasant. It is extremely cold/fountain. 
-    The water is fairly cold and has a faintly rusty tang to it/spring.
-    The water is so cold, it is hard to tell whether it has any 
-    taste/waterfall without getting yourself too wet. The water has
-    a slightly unpleasant, sulphuric tang to it/the stream. The water
-    is quite warm and has an unpleasant taste to it, suggestive of
-    decomposing vegetable matter/lake. It is cold and refreshing]. 
+# TEXT assigned SLURP
+#     You have taken a drink from the [stream. The water tastes strongly of
+#     minerals, but is not unpleasant. It is extremely cold/fountain. 
+#     The water is fairly cold and has a faintly rusty tang to it/spring.
+#     The water is so cold, it is hard to tell whether it has any 
+#     taste/waterfall without getting yourself too wet. The water has
+#     a slightly unpleasant, sulphuric tang to it/the stream. The water
+#     is quite warm and has an unpleasant taste to it, suggestive of
+#     decomposing vegetable matter/lake. It is cold and refreshing]. 
+TEXT SLURP
+   You have taken a drink from the stream.  The water tastes strongly of
+   minerals, but is not unpleasant.  It is extremely cold.
 #
 # TEXT NO.WEAR.CRUCIFIX
 #     The crucifix is not the kind you wear. It's far too large and heavy
