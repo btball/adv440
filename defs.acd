@@ -228,7 +228,7 @@ flags variable          # QUIPS
 #       homer.quip        # Remarked on hexameters
 #       rug.flung         # Got rug flung at us on spire top
 #       fangs.worn        # He wore the fangs once
-      trusting.bird     # Bird fed and hence trusts the player
+#       trusting.bird     # Bird fed and hence trusts the player
       wand.misfired     # Wand will not misfire again
       oryan.quip        # O'Ryan, not Orion!
 #       sunstone.examined # Examined sunstone at least once
@@ -419,7 +419,7 @@ constant chalice.mutter
 #
 state    on.rug
          dead.body
-      3, rotting.carcass
+#       3, rotting.carcass   # no rotting carcass in 440
 #
 # Define basilisk states
 #

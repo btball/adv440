@@ -32,7 +32,8 @@ variable foobar
 variable clock, stage, nuffink, ok
 variable hint.time
 # variable strength, mushtime, dragtime, masktime, lastclock
-variable strength, dragtime, lastclock
+# variable strength, dragtime, lastclock
+variable strength, lastclock  # no dragtime in 440 - no rotting dragon carcass 
 variable escape
 
 variable west.count

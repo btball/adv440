@@ -1,0 +1,56 @@
+Remaining work to be done before adv440 is ready for additional testing and then
+porting to the iPad:
+
+I.  Code
+
+1. Endgame logic needs to be fixed - currently it only scores the "success" scenario
+It needs to score the other ways of "blowing it" ...
+
+2. Unicorn logic needs to be fixed
+
+3. Chalice logic needs to be fixed
+Both Unicorn and Chalice were introduced in 440 but greatly expanded in 770
+I initially removed them completely but need to reinstate them in the limited
+mode they were in 440
+
+4. Pirate still seems bugged - I'll need to work with Mike Arnautov on this.  I am
+not sure if it's my bug or his.
+
+5. A bug when I am in the building and say "in" - I am then taken back to the path!
+
+II. Testing
+
+1. Test that all the treasures in 440 added after 350 can be collected and that
+all the puzzles work properly - especially the sewer area!
+I've tested all the 350 treasures and puzzles and it appears to be fine.
+
+2. Test end-to-end - before turning this loose to other testers win a complete 440-point
+game!
+
+3. Verify that all the giant stuff including ruby and legal documents works right.
+I suspect a bug in here ....
+
+4. Verify all the outdoor locations - I think I may have removed one description 
+incorrectly.  Although the castle isn't used in 440 it should be visible.
+
+III.  Documentation
+
+1. I need a map (to the same quality as my adv770 map)
+2. I'll want a walkthrough - even if I don't publish it (yet)
+3. Work with Mike to improve the a-code documentation and to be sure that the new exec 
+codes are documented
+
+IV.  General clean-up
+
+1. When I am sure it's all right (or 98% or so right) remove all the commented code
+and vestiges (in comments etc.) of post-adv440 code e.g. references to a vampire
+
+2. Replace deprecated code with preferred version
+
+3. (maybe a subset of 2) - replace logic that has a lot of nested ifs with "otherwise" 
+Where it would be more clear to the reader
+
+IV.  Final cross-check
+
+1. Go back and find everyplace where I've place a "btb" or "debug" in a comment 
+and make sure I've addressed it properly - and then cleanup the comment ...

@@ -3167,16 +3167,16 @@ proc empty.vessel       # Generic vessel emptying code
    else
       quip is.empty, vessel
    fin
-   ifnear dwarf
-      and
-   ifkey throw
-      call vessel.contents
-      deposit vessel, emptied
-      flag dwarf, special2               # Dvarves furious!
-      say the.it, result
-      say from.your, vessel
-      quip doused.dwarf, dwarf
-   fin
+#    ifnear dwarf
+#       and
+#    ifkey throw
+#       call vessel.contents
+#       deposit vessel, emptied
+#       flag dwarf, special2               # Dvarves furious!
+#       say the.it, result
+#       say from.your, vessel
+#       quip doused.dwarf, dwarf
+#    fin
 #    ifeq object.state, full.of.dung
 #       ifis vessel, bucket
 #          deposit vessel, dirtied
@@ -3257,15 +3257,19 @@ proc dragon.slayer
 #       apport teeth, here
       apport rug, here
       apport dragon, here
-      choose dragtime, 0, 5
-      add dragtime, 5
+#       choose dragtime, 0, 5   # No rotting dragon in 440
+#       add dragtime, 5
       unflag dragon, schizoid
 #       set rug, unrolled
       say dragon.vanquished
       say dragon
-      say rug
+#      say rug
+      quip rug
 #       quip teeth
+      checkpoint   # debug - btb
+#      quit  # remember quip implies quit! btb
    fin
+   checkpoint # debug - btb
    ifany quit, no, n
       restore command, text.ptr
       say use.a.weapon, arg1
@@ -3637,16 +3641,16 @@ proc events                  # Administrative clock has ticked
 #       ifgt sword, in.stone
 #          randomise sword, 1
 #       fin
-      ifgt dragon, on.rug
-         and
-      iflt dragon, rotting.carcass
-         sub dragtime, 1
-         ifeq dragtime, 4
-            or
-         ifeq dragtime, 0
-            add dragon, 1
-         fin
-      fin
+#       ifgt dragon, on.rug   # no rotting carcass in 440
+#          and
+#       iflt dragon, rotting.carcass
+#          sub dragtime, 1
+#          ifeq dragtime, 4
+#             or
+#          ifeq dragtime, 0
+#             add dragon, 1
+#          fin
+#       fin
 #       ifflag djinn, special1
 #          and
 #          not
@@ -3887,11 +3891,11 @@ proc hint.logic
    ifnear bird, freed
       ifhave rod
          lda text.ptr, bird.hint
-      else
-         ifflag quips, trusting.bird
-         else
-            lda text.ptr, bird.hint.2
-         fin
+#       else                       # need to double check all this - btb
+#          ifflag quips, trusting.bird
+#          else
+#             lda text.ptr, bird.hint.2
+#          fin
       fin
    otherwise
    ifat mtking
@@ -8092,7 +8096,7 @@ proc new.dloc, dn
 #        
 #====================================================================
 # 
-proc show.locs
+proc show.locs  # This proc used for debugging only
   local tmp
   local dl
   local item
@@ -8236,7 +8240,7 @@ proc move.npcs
     fin
     set bulging.coat, dcnt  # Set the text value
   fin
-  call show.locs          # Debugging tool
+#   call show.locs          # Debugging tool
 #
 #==================================================================
 #
@@ -8370,8 +8374,9 @@ proc pirate.stuff
   fin
   ifeq rest, 1
     or
-  ifgt swag, 1
-    apport pirate, mazea.114
+  ifgt swag, 0    # Changed from 1 ... btb
+#     apport pirate, mazea.114
+    apport pirate, limbo
     apport chest, mazea.114
     ifeq rest, 1
       say pirate.runs

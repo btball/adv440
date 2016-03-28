@@ -127,17 +127,17 @@ action get water
 #
 action get oil
    ifhere oil
-#       ifhave bottle
+      ifhave bottle
 # #          or
 # #       ifhave flask
-#       else
+      else
 #          ifhave bucket, emptied
 #             or
 #          ifhave bucket, dirtied
 #             quip no.oil.in.bucket
 #          fin
-#          quip no.way.to.carry, oil
-#       fin
+         quip no.way.to.carry, oil
+      fin
       ifhave bottle, emptied
          set bottle, full.of.oil
          say your.object, bottle
@@ -1541,6 +1541,11 @@ action look oyster
       set oyster, 1
       quip oyster.writing
    fin
+#
+#=====================================================================
+#
+# action look bottle
+#    quip bottle.is, bottle
 #
 #=====================================================================
 #

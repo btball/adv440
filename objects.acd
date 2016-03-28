@@ -64,14 +64,14 @@ OBJECT FOOD, RATIONS
   tasty food
   %There is food here.
 OBJECT BOTTLE, JAR
-  small bottle
-  %[There is a bottle of water here./
-   There is an empty bottle here./
-   There is a bottle of oil here.]
+   small bottle
+  %There is a bottle here.
+  &It is a fairly small bottle without a stopper, made of cheap
+  green glass. It is [empty/full of ][/water/oil].
 OBJECT WATER, H2O
   water in the bottle
 OBJECT OIL
-#   oil in the bottle
+#  oil in the bottle
 OBJECT MIRROR
   %
 OBJECT PLANT, BEANSTALK

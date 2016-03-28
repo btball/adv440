@@ -5350,17 +5350,20 @@ FRAGMENT YOUR.OBJECT
     Your #
 #
 TEXT IS.NOW
-   / is now [//empty/full of ][///water/oil].
+   / is now [empty/full of ][/water/oil].
 #
 TEXT IS.ALREADY
-   / is already [//empty/full of ][///water/oil].
+   / is already [empty/full of ][/water/oil].
 #
 # TEXT NO.OIL.IN.BUCKET
 #     The bucket is far too big for that! Try something smaller.
 #
 TEXT YOU.DEPOSIT
-    You carefully deposit the [///////mostly /half /quarter /ERROR ]full # on
+    You carefully deposit the bottle [empty/full of ][/water/oil] on
     the ground.
+#
+TEXT  Bottle.is
+    The bottle is [empty/full of ][/water/oil].
 #
 # TEXT DOWN.THE.FOLIAGE
 #    / drop[s/] out of sight through the beanstalk foliage.

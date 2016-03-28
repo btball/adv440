@@ -730,7 +730,7 @@ init
 #    flag plate, unstable
 #    flag beads, unstable
 #    flag crucifix, unstable
-   flag bottle, unstable
+#      flag bottle, unstable  
 #    flag starstone, unstable
    flag batteries, unstable
 #    flag rags, unstable
@@ -871,6 +871,7 @@ init
    apport bear, bear.room
    apport bird, bird.chamber
    apport bottle, building
+   set bottle, full.of.water
    apport cage, cobbles
    apport carpet, soft
    apport chain, bear.room
@@ -890,7 +891,7 @@ init
    apport emerald, plover
    apport fissure, east.of.fissure
    apport flagstone, dungeon
-   apport food, pantry
+#    apport food, pantry  # dealt with later - btb
    apport giant, quarters
    apport grate, depression
 #   apport horn, storeroom
@@ -1016,6 +1017,7 @@ init
 #
    exec 17
    apport food, house
+#    apport food, pantry   # per MLA - home loc is pantry even though it starts initially in the house
    apport horn, storeroom
 #
 # Declare schizoid objects.
