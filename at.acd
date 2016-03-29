@@ -301,7 +301,7 @@ AT building  # checked
       quip already.inside, building
    fin
    move enter, out, outdoor, west, road
-   checkpoint # Debug - btb
+#    checkpoint # Debug - btb
 #    ifkey in
 #       quip already.inside, building
 #    fin

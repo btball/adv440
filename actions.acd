@@ -4481,7 +4481,6 @@ action blow horn
 #       ifinrange here, island, ylem
          quip loud.squeak
       fin
-      LDA PLACE.PTR, DTHERE
       iterate obj.ptr, dwarf0, dwarf4
          ifloc obj.ptr, dquarters
          else
@@ -4490,10 +4489,8 @@ action blow horn
             else
                apport obj.ptr, here
                add comers, 1
-               DEPOSIT PLACE.PTR, HERE
             fin
          fin
-         ADD PLACE.PTR, 1
       fin
       ifeq party, 0
          and

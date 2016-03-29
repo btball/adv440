@@ -8160,11 +8160,17 @@ proc move.npcs
     ifeq dloc, there        # Is he THERE?
        and
        not
-    ifflag there, no.dwarf
-       and
+    ifflag there, no.dwarf  # If player coming from a forbidden place
+       and                  # (because, notionally, dwarves move first!)
        not
     ifflag here, no.dwarf   # Is he allowed HERE? Follow the player!
        set dnew, here       # Note his new location
+    otherwise
+    ifeq dloc, here         # Is the dwarf already here
+       and
+       not
+    ifflag status, moved    # And the player has not moved
+       set dnew, here       # The dwarf does not move either
     otherwise
     ifis dloc, dquarters    # He's "resting"
        set dnew, dloc
@@ -8175,6 +8181,11 @@ proc move.npcs
         set dnew, dloc      # Else he stays put
       fin
     fin
+# say "f:$:_", dn
+# eval temp, place.ptr
+# say "f:$ =\>_", temp
+# say "f:$ =\>_", dloc
+# say "$", dnew
     ifeq dn, 5              # It's the pirate!
       ifeq dnew, here
          and
@@ -8377,9 +8388,10 @@ proc pirate.stuff
   fin
   ifeq rest, 1
     or
-  ifge swag, 1     
-    apport pirate, ylem
+  ifgt swag, 0    # Changed from 1 ... btb
+    apport pirate, mazea.114
     apport chest, mazea.114
+    apport message, mazed.140
     ifeq rest, 1
       say pirate.runs
     else
