@@ -3592,6 +3592,15 @@ proc closing.time
 proc dwarf.encounter
    local dcur
    local dn
+   ifflag here, no.dwarf
+      or
+   ifflag here, not.in.cave
+      or
+      not
+   ifflag status, light.here
+      set daggro, 0
+      proceed
+   fin
    chance 50                # Maybe zap a dwarf
       lda dcur, dwarf0
       random dn, 5

@@ -1,6 +1,6 @@
 ### debug.acd ########################################################
 #
-# This optional adv770 module can be included in the adv770.acd file
+# This optional adv440 module can be included in the adv440.acd file
 # anywhere between procs.acd and actions.acd -- placing it anywhere
 # else may cause problems. The resulting executable will be marginally
 # larger and will include wiz (or debug) mode commands. These can
@@ -22,16 +22,34 @@ verb numbers
 verb increment
 verb previous
 verb !runout
+verb first
+verb npcs
+verb waldo
+verb tremain
+verb egress
+verb perambulate
+verb aqua
 #
 #=====================================================================
 #
+var entname
 var magick
 flags variable
     nowiz
     glowing
     show.numbers
+    show.npcs
 #
 #=====================================================================
+#
+TEXT  OBject.is
+    # at {ENTNAME}
+#
+TEXT  Not.visited
+    {ENTNAME} not yet visited
+#
+text aqua.here
+   {ENTNAME} has water
 #
 text YOU.GLOW
     [Your body is surrounded by a magical glow./The glow surrounding
@@ -42,15 +60,16 @@ fragment cycle YOUR.MAGNIFICENCE
     Your [Mightiness/Wizardness/Magnificence/Puissance/Splendiferousness]
 #
 text STATE.IS.NOW
-   The state of the {arg2} is now $. The description now reads:
+   The state of the object '{arg2}' is now $. The description now reads:
 #
 text LOCATION.NUMBER
 
-    I beg to report to {YOUR.MAGNIFICENCE} that this be location number $.
+    I beg to report that this be '{ENTNAME}', location number $.
 
 #
 text NO.CAN.SET
-    No can do! The state of {arg2} would become negative: $.
+    But, {YOUR.MAGNIFICENCE}! The state of the object '{arg2}'
+    would become negative: $!
 #
 text VOCAB.WIZ
     Wizard (i.e. debug) commands:
@@ -60,29 +79,40 @@ text VOCAB.WIZ
    /   dump                        - dump values and bits
    /   fetch \<object\> (obtain)     - fetch the object from wherever
    /   find \<object\>               - go where the object is
+   /   first                       - forces first dwarf, if axe not seen
    /   fly \<location\> (teleport)   - go to the named location
    /   glow                        - toggle magical illumination
    /   increment \<entity\>          - increment state value of object or location 
    /   next                        - go to the next higher location
+   /   npcs                        - toggle reporting of NPCs
    /   numbers                     - toggle reporting of location refnos
    /   previous                    - go to the next lower location
    /   runout                      - sets event clock to zero
    /   wizard \{on|off}             - switches wizard mode on or off
 #
-text cycle TO.HEAR.IS.TO.OBEY
-    To hear is to obey,[/ Oh/=/=] [{YOUR.MAGNIFICENCE}/Great Wizard/Mighty One/
+fragment random YOUR.WISH
+    [To hear is to obey/Your wish is my command/As you desire/
+    It shall be so/Of course. Immediately]
+#
+text random TO.HEAR.IS.TO.OBEY
+    {YOUR.WISH},[/ Oh/=] [{YOUR.MAGNIFICENCE}/Great Wizard/Mighty One/
     the Greatest of Wizards]!
 
 #
 text increment NO.DESTINATION
-    [Yeah, OK, we can {arg1}. But y/Y]ou should also say *where* you want
-    to {arg1}!
+    Assuredly {YOUR.MAGNIFICENCE} can {ARG1}, but alas, a destination is
+    required.
 #
 text WIZ.NO.CHANGE
-    But {YOUR.MAGNIFICENCE}!.. The wizard mode is *already* {ARG2}!
+    But, {YOUR.MAGNIFICENCE}!.. The wizard mode is *already* {ARG2}!
 #
-# text .VALUE.OF
-#     Variable value is $.
+text WIZ.NOT.OBJECT
+    Alas, {YOUR.MAGNIFICENCE}, {ARG2} is not actually 
+    a[n/ portable] object.
+#
+text cycle BAD.WIZ.COM
+    I am [mortified/ashamed/disturbed/perplexed] to find myself 
+    not understanding.
 #
 text .NAMED.VALUE
     The value of # is $.
@@ -148,6 +178,49 @@ proc place.chain, step
    fin
    quit
 #
+#---------------------------------------------------------------------
+#
+proc show.locs
+  local dl, dn
+  set entname, here
+  say blank
+  say "This be '{entname}', dwarves present: $.", dwarf
+  lda dl, sack0
+  iterate obj.ptr, dwarf0, pirate
+    locate entname, obj.ptr
+    ifis obj.ptr, pirate
+      ifflag chest, seen
+      else
+        say "PIRATE at '{ENTNAME}'."
+      fin
+    else
+      say "f:DWARF$ at_'{ENTNAME}'", dn
+      itobj entname, dl
+        say "f:, carrying '{ENTNAME}'"
+      fin
+      say "."
+    fin
+    add dl, 1
+    add dn, 1
+  fin
+  say blank
+#
+#---------------------------------------------------------------------
+#
+proc wiz.reports
+   ifflag magick, nowiz
+      proceed
+   fin
+   ifflag magick, show.numbers
+      and
+   ifflag status, moved
+      set entname, here
+      say location.number, entname
+   fin
+   ifflag magick, show.npcs
+      call show.locs
+   fin
+#
 #======================================================================
 #
 action close cave
@@ -193,18 +266,24 @@ action find
    ifflag magick, nowiz
       proceed
    fin
-   ifhave arg2
-      quip you.have.it, arg2
+   ifflag arg2, place
+      call fly
    fin
-   ifat arg2
-      quip you.are.there
-   fin
-   locate place.ptr, arg2
-   ifgt place.ptr, 0
-      move place.ptr
+   ifflag arg2, object
+      ifhave arg2
+         quip you.have.it, arg2
+      fin
+      ifat arg2
+         quip you.are.there
+      fin
+      locate place.ptr, arg2
+      ifgt place.ptr, 0
+         move place.ptr
+      else
+         quip, "Oddly, {ARG2} is nowhere to be found!"
+      fin
    else
-#      quip "Alas, no can do, since {ARG2} is not actually an object."
-      quip hah!
+      quip wiz.not.object, 0
    fin
 #
 #---------------------------------------------------------------------
@@ -214,6 +293,7 @@ action runout
       proceed
    fin
    set clock, 0
+   say to.hear.is.to.obey
    smove here, ok!
 #
 #---------------------------------------------------------------------
@@ -271,16 +351,16 @@ action fetch
          quip you.do.it
       fin
    fin   
-   quip hah!
+   quip wiz.not.object, 1
 #
 #---------------------------------------------------------------------
 #
 # action mutter
-#    ifflag magick, nowiz
-#       proceed
-#    fin
-#    set mutter.time, 0
-#    quit
+   ifflag magick, nowiz
+      proceed
+   fin
+   set mutter.time, 0
+   quip to.hear.is.to.obey
 #
 #---------------------------------------------------------------------
 #
@@ -308,17 +388,11 @@ action dump
 #---------------------------------------------------------------------
 #
 action increment
-   ifflag magick, nowiz
-      proceed
-   fin
    call change.state, 1
 #
 #---------------------------------------------------------------------
 #
 action decrement
-   ifflag magick, nowiz
-      proceed
-   fin
    call change.state, -1
 #
 #---------------------------------------------------------------------
@@ -358,12 +432,11 @@ action fly
    ifeq status, 1
       quip no.destination
    fin
-#    ifkey catacombs
-#       lda arg2, catacombs.lobby
-#    fin
    ifflag arg2, place
       flag arg2, been.here
       smove arg2, foof
+   else
+      quip bad.wiz.com
    fin
 #
 #---------------------------------------------------------------------
@@ -394,6 +467,993 @@ action wizard
       quip wiz.no.change
    fin
 #
+#---------------------------------------------------------------------
+#
+action where
+   ifflag magick, nowiz
+      proceed
+   fin
+   ifflag arg2, object
+     locate entname, arg2
+     quip "Be advised that the object '{ARG2}' is at '{ENTNAME}' (refno $).", entname
+   else
+     quip wiz.not.object, 0
+   fin
+#
+#---------------------------------------------------------------------
+#
+action waldo  # where in the world is waldo ?
+   ifflag magick, nowiz
+      proceed
+   fin
+   set entname, here
+   quip "you are at '{ENTNAME}' "
+#
+#---------------------------------------------------------------------
+#
+action tremain   # find location of any treasures not yet seen 
+#              # n. b. only treasures flagged as such! (tusk doesn't start as a treasure)
+   local temp.ptr
+   ifflag magick, nowiz
+      proceed
+   fin
+   iterate obj.ptr first.treasure+1, last.treasure-1
+      ifflag obj.ptr, seen
+      else
+        locate entname, obj.ptr
+        say object.is, obj.ptr
+      fin
+   fin
+   quit
+#
+#---------------------------------------------------------------------
+#
+action perambulate
+   local loc.ptr
+   local temp.ptr
+   ifflag magick, nowiz
+      proceed
+   fin
+   itloc loc.ptr
+      ifflag loc.ptr, been.here
+         OR
+      ifflag loc.ptr, in.maze
+         OR
+      ifflag loc.ptr, no.access
+      else
+          set entname, loc.ptr
+          say  not.visited
+      fin
+   fin
+   quit
+#
+#---------------------------------------------------------------------
+#
+#
+action aqua
+   local loc.ptr
+   local temp.ptr
+   ifflag magick, nowiz
+      proceed
+   fin
+   itloc loc.ptr
+      ifflag loc.ptr, h20.here
+          set entname, loc.ptr
+          say  aqua.here
+      fin
+   fin
+   quit
+
+#---------------------------------------------------------------------
+#
+action first
+   ifflag magick, nowiz
+      proceed
+   fin
+   ifflag axe, seen
+      or
+   ifflag here, not.in.cave
+      or
+   ifflag here, no.dwarf
+      quip "Alas, this is not the time or place, {YOUR.MAGNIFICENCE}."
+   else
+      set daggro,1
+   fin
+   quit
+#
+#---------------------------------------------------------------------
+#
+action egress
+   ifflag magick, nowiz
+      proceed
+   fin
+   IFAT BOULDER.Chamber
+      Say " West To Warmjunctn"
+      Say " Fork To Fork"
+      Say " View To Breathtaker"
+   OTHERWISE
+   IFAT Secret.Junction
+      Say "SE To Bedquilt"
+      Say "South To Secret.N/S.Canyon.2"
+      Say "North To West.Window"
+   OTHERWISE
+   IFAT Arched
+      Say "D To Shell"
+   OTHERWISE
+   IFAT Nugget.Room
+      Say "North To Mists"
+   OTHERWISE
+   IFAT Warmjunctn
+      Say "South To Fork"
+      Say "North To View"
+      Say "East To Crawl"
+   OTHERWISE
+   IFAT Mazea.44
+      Say "East To Mazea.43"
+      Say "D To Mazea.48"
+      Say "South To Mazea.50"
+      Say "North To Mazea.82"
+   OTHERWISE
+   IFAT Mazea.55
+      Say "West To Mazea.52"
+      Say "North To Mazea.55"
+      Say "D To Mazea.56"
+      Say "East To Mazea.By.Pit"
+   OTHERWISE
+   IFAT Mazea.84
+      Say "North To Mazea.By.Pit"
+      Say "West To Mazea.83"
+      Say "NW To Mazea.114"
+   OTHERWISE
+   IFAT West.Of.Fissure
+      Say "Over To East.Of.Fissure"
+      Say "West To West.End.Of.Mists"
+   OTHERWISE
+   IFAT Large.Room
+      Say "West To Large.Long.Tunnel"
+      Say "East To Secret.N/S.Canyon.1"
+   OTHERWISE
+   IFAT Large.Cavern
+      Say "SW To Low.Passage"
+      Say "North To Swirling.Mist"
+   OTHERWISE
+   IFAT Cavern
+      Say "South To Immense.N/S.Passages"
+      Say "West To Incline"
+   OTHERWISE
+   IFAT Mazea.By.Pit
+      Say "D To Bird.Chamber"
+      Say "West To Mazea.55"
+      Say "South To Mazea.58"
+      Say "North To Mazea.83"
+      Say "East To Mazea.84"
+   OTHERWISE
+   IFAT Mirror.Canyon
+      Say "South To Secret.N/S.Canyon.1"
+      Say "North To Reservoir"
+   OTHERWISE
+   IFAT Web.Maze.6
+      Say "North To Web.Maze.6"
+      Say "East To Web.Maze.1"
+      Say "South To Web.Maze.4"
+      Say "Up To Web.Maze.5"
+      Say "D To Web.Maze.2"
+   OTHERWISE
+   IFAT Very.Unsafe
+      Say "South To Unsafe"
+   OTHERWISE
+   IFAT Web.Maze.3
+      Say "North To Web.Maze.2"
+      Say "East To Web.Maze.3"
+      Say "West To Web.Maze.1"
+      Say "South To Web.Maze.4"
+      Say "Up To Web.Maze.5"
+   OTHERWISE
+   IFAT East.Window
+      Say "East To Y2"
+      Say "Reflect To West.Window"
+   OTHERWISE
+   IFAT Debris
+      Say "Entrance To In.Cave"
+      Say "East To Cobbles"
+      Say "West To Canyon"
+      Say "Xyzzy To Building"
+      Say "Pit To Pit"
+   OTHERWISE
+   IFAT Dead.End.3
+      Say "South To Tall.E/W.Canyon"
+   OTHERWISE
+   IFAT Anteroom
+      Say "NE To Unsafe"
+      Say "West To Complex"
+      Say "East To Witts.End"
+      Say "South To Chapel"
+   OTHERWISE
+   IFAT Bedquilt
+      Say "East To Complex"
+      Say "West To Swiss"
+      Say "South To Large.Room"
+      Say "Slab To Slab"
+      Say "Up To Dusty"
+      Say "North To Secret.Junction"
+      Say "D To Anteroom"
+   OTHERWISE
+   IFAT South.Side.Chamber
+      Say "North To Mtking"
+      Say "D To Half.Stairs"
+   OTHERWISE
+   IFAT Half.Stairs
+      Say "Up To South.Side.Chamber"
+      Say "D To Cellar.View"
+   OTHERWISE
+   IFAT Mazed.138
+      Say "D To Mazed.107"
+      Say "East To Mazed.131"
+      Say "NE To Mazed.132"
+      Say "Up To Mazed.133"
+      Say "West To Mazed.134"
+      Say "North To Mazed.135"
+      Say "South To Mazed.136"
+      Say "SE To Mazed.137"
+      Say "SW To Mazed.139"
+      Say "NW To Mazed.112"
+   OTHERWISE
+   IFAT Mazea.114
+      Say "SE To Mazea.84"
+   OTHERWISE
+   IFAT Mazea.58
+      Say "East To Mazea.By.Pit"
+   OTHERWISE
+   IFAT Curtain.Entrance
+      Say "D To Basement"
+      Say "Up To Pantry"
+      Say "NW To Soft"
+   OTHERWISE
+   IFAT Mists
+      Say "South To Nugget.Room"
+      Say "West To East.Of.Fissure"
+      Say "North To Mtking"
+      Say "Up To Pit"
+      Say "Y2 To Jumble"
+   OTHERWISE
+   IFAT Mazed.137
+      Say "SE To Mazed.107"
+      Say "NE To Mazed.131"
+      Say "South To Mazed.132"
+      Say "D To Mazed.133"
+      Say "Up To Mazed.134"
+      Say "NW To Mazed.135"
+      Say "North To Mazed.136"
+      Say "SW To Mazed.138"
+      Say "East To Mazed.139"
+      Say "West To Mazed.112"
+   OTHERWISE
+   IFAT Mazea.81
+      Say "West To Mazea.80"
+   OTHERWISE
+   IFAT Long.Hall.East
+      Say "East To West.End.Of.Mists"
+      Say "West To Long.Hall.West"
+      Say "North To Crossover"
+   OTHERWISE
+   IFAT Dark
+      Say "South To Plover"
+   OTHERWISE
+   IFAT Dead.End.2
+      Say "South To Low"
+   OTHERWISE
+   IFAT Mazea.86
+      Say "Up To Mazea.52"
+   OTHERWISE
+   IFAT Tight.Dead.End
+      Say "North To Wide.N/S.Canyon"
+   OTHERWISE
+   IFAT Crossover
+      Say "West To Long.Hall.East"
+      Say "North To Dead.End.1"
+      Say "East To West.Side.Chamber"
+      Say "South To Long.Hall.West"
+   OTHERWISE
+   IFAT East.Pit.End
+      Say "East To Swiss"
+      Say "West To West.Pit.End"
+      Say "D To East.Pit"
+   OTHERWISE
+   IFAT Dungeon.Exit
+      Say "South To Well.Bottom"
+   OTHERWISE
+   IFAT Cellar.View
+      Say "Up To Half.Stairs"
+   OTHERWISE
+   IFAT Mazed.139
+      Say "SW To Mazed.107"
+      Say "NW To Mazed.131"
+      Say "East To Mazed.132"
+      Say "West To Mazed.133"
+      Say "North To Mazed.134"
+      Say "D To Mazed.135"
+      Say "SE To Mazed.136"
+      Say "Up To Mazed.137"
+      Say "South To Mazed.138"
+      Say "NE To Mazed.112"
+   OTHERWISE
+   IFAT Barren
+      Say "West To Limestone"
+      Say "Fork To Fork"
+      Say "East To Bear.Room"
+      Say "View To Breathtaker"
+   OTHERWISE
+   IFAT Hill
+      Say "North To Road"
+      Say "South To Forest.1"
+   OTHERWISE
+   IFAT East.Of.Fissure
+      Say "East To Mists"
+      Say "Over To West.Of.Fissure"
+   OTHERWISE
+   IFAT Sewer.4
+      Say "NE To Culvert.South"
+      Say "Up To Stream.Maze"
+   OTHERWISE
+   IFAT West.Window
+      Say "West To Secret.Junction"
+      Say "Reflect To East.Window"
+   OTHERWISE
+   IFAT Mazea.82
+      Say "South To Mazea.44"
+   OTHERWISE
+   IFAT Web.Maze.2
+      Say "North To Web.Maze.1"
+      Say "East To Web.Maze.2"
+      Say "West To Web.Maze.6"
+      Say "South To Web.Maze.3"
+      Say "Up To Web.Maze.4"
+   OTHERWISE
+   IFAT Crypt
+      Say "Up To Chapel"
+   OTHERWISE
+   IFAT Sewer.2
+      Say "North To Sewer.1"
+      Say "South To Sewer.3"
+   OTHERWISE
+   IFAT Mazed.135
+      Say "North To Mazed.107"
+      Say "SE To Mazed.131"
+      Say "D To Mazed.132"
+      Say "South To Mazed.133"
+      Say "East To Mazed.134"
+      Say "West To Mazed.136"
+      Say "SW To Mazed.137"
+      Say "NE To Mazed.138"
+      Say "NW To Mazed.139"
+      Say "Up To Mazed.112"
+   OTHERWISE
+   IFAT Pit
+      Say "Entrance To In.Cave"
+      Say "East To Bird.Chamber"
+      Say "D To Mists"
+   OTHERWISE
+   IFAT Mazed.112
+      Say "SW To Mazed.131"
+      Say "North To Mazed.132"
+      Say "East To Mazed.133"
+      Say "NW To Mazed.134"
+      Say "SE To Mazed.135"
+      Say "NE To Mazed.136"
+      Say "West To Mazed.137"
+      Say "D To Mazed.138"
+      Say "Up To Mazed.139"
+      Say "South To Mazed.140"
+   OTHERWISE
+   IFAT Secret.N/S.Canyon.1
+      Say "D To Large.Room"
+      Say "Slab To Slab"
+      Say "South To Secret.N/E.Canyon.1"
+      Say "North To Mirror.Canyon"
+      Say "Reservoir To Reservoir"
+   OTHERWISE
+   IFAT Sewer.5
+      Say "East To Culvert.South"
+   OTHERWISE
+   IFAT Den
+      Say "South To North.Attic"
+   OTHERWISE
+   IFAT Mazea.49
+      Say "East To Mazea.50"
+      Say "West To Mazea.51"
+   OTHERWISE
+   IFAT Phoney.Shaft
+      Say "Up To Low.Room"
+      Say "D To Culvert"
+   OTHERWISE
+   IFAT East.Pit
+      Say "Upward East.Pit.End"
+   OTHERWISE
+   IFAT Stream.Maze
+      Say "South To Large.Room"
+      Say "D To Stream.Maze"
+   OTHERWISE
+   IFAT Mazed.140
+      Say "North To Mazed.112"
+   OTHERWISE
+   IFAT Fork
+      Say "West To Corridor"
+      Say "NE To Warmjunctn"
+      Say "SE To Limestone"
+      Say "View To Breathtaker"
+      Say "Barren To Barren"
+   OTHERWISE
+   IFAT Ragged.Corridor
+      Say "Up To Shell"
+      Say "D To Culdesac"
+   OTHERWISE
+   IFAT Mazed.131
+      Say "West To Mazed.107"
+      Say "SE To Mazed.132"
+      Say "NW To Mazed.133"
+      Say "SW To Mazed.134"
+      Say "NE To Mazed.135"
+      Say "Up To Mazed.136"
+      Say "D To Mazed.137"
+      Say "North To Mazed.138"
+      Say "South To Mazed.139"
+      Say "East To Mazed.112"
+   OTHERWISE
+   IFAT Culvert
+      Say "North To Sea.View"
+      Say "South To Culvert.South"
+   OTHERWISE
+   IFAT Secret.N/E.Canyon.3
+      Say "East To Secret.E/W.Canyon"
+   OTHERWISE
+   IFAT Cellar
+      Say "Back To Cellar"
+   OTHERWISE
+   IFAT West.Pit.End
+      Say "East To East.Pit.End"
+      Say "West To Slab"
+      Say "D To West.Pit"
+   OTHERWISE
+   IFAT Soft
+      Say "West To Swiss"
+      Say "East To Bare.Cavern"
+      Say "SE To Curtain.Entrance"
+   OTHERWISE
+   IFAT Breathtaker
+      Say "South To Warmjunctn"
+      Say "Fork To Fork"
+   OTHERWISE
+   IFAT Low.Room
+      Say "East To Narrow.Crack"
+      Say "West To Bones.Room"
+      Say "D To Phoney.Shaft"
+   OTHERWISE
+   IFAT Mazea.47
+      Say "East To Mazea.45"
+   OTHERWISE
+   IFAT Depression
+      Say "East To Forest.1"
+      Say "Building To Road"
+      Say "North To Slit"
+   OTHERWISE
+   IFAT Misty
+      Say "South To Oriental"
+      Say "West To Alcove"
+   OTHERWISE
+   IFAT Brink
+      Say "West To Dirty"
+      Say "D To Streampit"
+   OTHERWISE
+   IFAT Sw.Of.Chasm
+      Say "SW To Sloping"
+   OTHERWISE
+   IFAT Mazea.43
+      Say "West To Mazea.42"
+      Say "South To Mazea.44"
+      Say "East To Mazea.45"
+   OTHERWISE
+   IFAT Swirling.Mist
+      Say "East To Swirling.Mist"
+   OTHERWISE
+   IFAT Forest.1
+      Say "East To Valley"
+      Say "Forest To Forest.2"
+      Say "West To Forest.1"
+   OTHERWISE
+   IFAT South.Attic
+      Say "South To Top.Of.Chapel"
+      Say "North To North.Attic"
+      Say "SW To Pantry"
+   OTHERWISE
+   IFAT Y2
+      Say "Plugh To Building"
+      Say "South To Low.N/S.Passage"
+      Say "East To Jumble"
+      Say "West To East.Window"
+      Say "Plover To Plover"
+   OTHERWISE
+   IFAT Dead.End.1
+      Say "South To Crossover"
+   OTHERWISE
+   IFAT Slit
+      Say "Building To Road"
+      Say "North To Valley"
+      Say "West To Forest.1"
+      Say "South To Depression"
+   OTHERWISE
+   IFAT Mazea.80
+      Say "North To Mazea.42"
+      Say "West To Mazea.80"
+      Say "South To Mazea.80"
+      Say "East To Mazea.81"
+   OTHERWISE
+   IFAT Low.Passage
+      Say "South To Bare.Cavern"
+      Say "North To Large.Cavern"
+   OTHERWISE
+   IFAT Secret.N/E.Canyon.1
+      Say "North To Secret.N/S.Canyon.1"
+      Say "East To Dragon.Blocks.Way"
+   OTHERWISE
+   IFAT Sea.View
+      Say "South To Culvert"
+   OTHERWISE
+   IFAT Alcove
+      Say "NW To Misty"
+      Say "East To Plover"
+   OTHERWISE
+   IFAT Shaft
+      Say "Up To Low.Room"
+      Say "D To Culvert"
+   OTHERWISE
+   IFAT Low
+      Say "Bedquilt To Bedquilt"
+      Say "SW To Sloping"
+      Say "North To Dead.End.2"
+      Say "SE To Oriental"
+   OTHERWISE
+   IFAT Secret.E/W.Canyon
+      Say "East To Mtking"
+      Say "West To Secret.N/E.Canyon.3"
+      Say "D To Wide.N/S.Canyon"
+   OTHERWISE
+   IFAT Culvert.South
+      Say "North To Culvert"
+      Say "East To Sewer.1"
+      Say "West To Sewer.5"
+      Say "SW To Sewer.4"
+   OTHERWISE
+   IFAT Long.Hall.West
+      Say "East To Long.Hall.East"
+      Say "North To Crossover"
+      Say "South To Mazed.107"
+   OTHERWISE
+   IFAT Witts.End
+      Say "East To Anteroom"
+      Say "West To Crawl.Caved.In.2"
+   OTHERWISE
+   IFAT Ne.Repository
+      Say "SW To Sw.Repository"
+   OTHERWISE
+   IFAT Giant.Room
+      Say "South To Narrow.Corridor"
+      Say "North To Immense.N/S.Passages"
+   OTHERWISE
+   IFAT Shell
+      Say "Up To Arched"
+      Say "D To Ragged.Corridor"
+      Say "South To Complex"
+   OTHERWISE
+   IFAT Cobbles
+      Say "East To In.Cave"
+      Say "West To Debris"
+      Say "Pit To Pit"
+   OTHERWISE
+   IFAT Reservoir
+      Say "South To Mirror.Canyon"
+      Say "West To Causeway.East"
+   OTHERWISE
+   IFAT Basement
+      Say "South To Cellar"
+      Say "Up To Curtain.Entrance"
+   OTHERWISE
+   IFAT Large.Long.Tunnel
+      Say "West To Slab"
+      Say "East To Large.Room"
+   OTHERWISE
+   IFAT Stable
+      Say "West To Chapel"
+   OTHERWISE
+   IFAT Incline
+      Say "North To Cavern"
+      Say "D To Low"
+   OTHERWISE
+   IFAT Mazea.48
+      Say "Up To Mazea.44"
+   OTHERWISE
+   IFAT Mazed.107
+      Say "South To Mazed.131"
+      Say "SW To Mazed.132"
+      Say "NE To Mazed.133"
+      Say "SE To Mazed.134"
+      Say "Up To Mazed.135"
+      Say "NW To Mazed.136"
+      Say "East To Mazed.137"
+      Say "West To Mazed.138"
+      Say "North To Mazed.139"
+      Say "D To Long.Hall.West"
+   OTHERWISE
+   IFAT Mazea.87
+      Say "D To Mazea.45"
+   OTHERWISE
+   IFAT Unsafe
+      Say "South To Anteroom"
+      Say "North To Very.Unsafe"
+   OTHERWISE
+   IFAT Tall.E/W.Canyon
+      Say "East To Wide.N/S.Canyon"
+      Say "West To Dead.End.3"
+      Say "North To Swiss"
+   OTHERWISE
+   IFAT Mazed.133
+      Say "Up To Mazed.107"
+      Say "D To Mazed.131"
+      Say "West To Mazed.132"
+      Say "NE To Mazed.134"
+      Say "SW To Mazed.135"
+      Say "East To Mazed.136"
+      Say "North To Mazed.137"
+      Say "NW To Mazed.138"
+      Say "SE To Mazed.139"
+      Say "South To Mazed.112"
+   OTHERWISE
+   IFAT Web.Maze.4
+      Say "North To Web.Maze.2"
+      Say "East To Web.Maze.3"
+      Say "West To Web.Maze.6"
+      Say "Up To Web.Maze.5"
+   OTHERWISE
+   IFAT Corridor
+      Say "West To Ne.Of.Chasm"
+      Say "East To Fork"
+      Say "View To Breathtaker"
+      Say "Barren To Barren"
+   OTHERWISE
+   IFAT Mazea.50
+      Say "East To Mazea.44"
+      Say "West To Mazea.49"
+      Say "D To Mazea.51"
+      Say "South To Mazea.52"
+   OTHERWISE
+   IFAT Dusty
+      Say "East To Dirty"
+      Say "D To Complex"
+      Say "Bedquilt To Bedquilt"
+   OTHERWISE
+   IFAT Complex
+      Say "Up To Dusty"
+      Say "West To Bedquilt"
+      Say "North To Shell"
+      Say "East To Anteroom"
+   OTHERWISE
+   IFAT Oriental
+      Say "SE To Swiss"
+      Say "West To Low"
+      Say "North To Misty"
+   OTHERWISE
+   IFAT Canyon
+      Say "Entrance To In.Cave"
+      Say "East To Debris"
+      Say "West To Bird.Chamber"
+      Say "Pit To Pit"
+   OTHERWISE
+   IFAT West.End.Of.Mists
+      Say "South To Mazea.42"
+      Say "East To West.Of.Fissure"
+      Say "West To Long.Hall.East"
+   OTHERWISE
+   IFAT Mazea.52
+      Say "West To Mazea.50"
+      Say "East To Mazea.51"
+      Say "South To Mazea.52"
+      Say "Up To Mazea.53"
+      Say "North To Mazea.55"
+      Say "D To Mazea.86"
+   OTHERWISE
+   IFAT Pantry
+      Say "East To Top.Of.Chapel"
+      Say "NE To South.Attic"
+      Say "North To Curtain.Entrance"
+   OTHERWISE
+   IFAT Mazea.56
+      Say "Up To Mazea.55"
+   OTHERWISE
+   IFAT Mazea.45
+      Say "West To Mazea.42"
+      Say "North To Mazea.43"
+      Say "East To Mazea.46"
+      Say "South To Mazea.47"
+      Say "Up To Mazea.87"
+   OTHERWISE
+   IFAT Swiss
+      Say "NE To Bedquilt"
+      Say "West To East.Pit.End"
+      Say "Canyon To Tall.E/W.Canyon"
+      Say "East To Soft"
+      Say "Oriental To Oriental"
+   OTHERWISE
+   IFAT Mtking
+      Say "East To Mists"
+      Say "Secret To Secret.E/W.Canyon"
+   OTHERWISE
+   IFAT Mazea.54
+      Say "West To Mazea.53"
+   OTHERWISE
+   IFAT Secret.N/S.Canyon.2
+      Say "North To Secret.Junction"
+      Say "D To Bedquilt"
+      Say "South To Top.Of.Stalactite"
+   OTHERWISE
+   IFAT Storeroom
+      Say "Out To 163"
+   OTHERWISE
+   IFAT Slab
+      Say "South To West.Pit.End"
+      Say "Up To Large.Long.Tunnel"
+      Say "North To Bedquilt"
+   OTHERWISE
+   IFAT Well.Bottom
+      Say "North To Dungeon.Exit"
+   OTHERWISE
+   IFAT Road
+      Say "West To Hill"
+      Say "East To Building"
+      Say "South To Valley"
+      Say "East To Forest.1"
+      Say "Depression To Depression"
+   OTHERWISE
+   IFAT Mazed.136
+      Say "East To Mazed.107"
+      Say "West To Mazed.131"
+      Say "Up To Mazed.132"
+      Say "SW To Mazed.133"
+      Say "D To Mazed.134"
+      Say "South To Mazed.135"
+      Say "NW To Mazed.137"
+      Say "SE To Mazed.138"
+      Say "NE To Mazed.139"
+      Say "North To Mazed.112"
+   OTHERWISE
+   IFAT Narrow.Corridor
+      Say "East To West.Pit"
+      Say "West To Giant.Room"
+   OTHERWISE
+   IFAT Sw.Repository
+      Say "NE To Ne.Repository"
+   OTHERWISE
+   IFAT Beams
+      Say "D To Chapel"
+   OTHERWISE
+   IFAT Chapel
+      Say "Climb To Beams"
+      Say "North To Anteroom"
+      Say "East To Stable"
+      Say "West Top.Of.Chapel"
+      Say "D To Crypt"
+   OTHERWISE
+   IFAT West.Side.Chamber
+      Say "East To Mtking"
+      Say "West To Crossover"
+   OTHERWISE
+   IFAT Plover
+      Say "West To Alcove"
+      Say "Plover To Y2"
+      Say "NE To Dark"
+   OTHERWISE
+   IFAT West.Pit
+      Say "Up To West.Pit.End"
+   OTHERWISE
+   IFAT Limestone
+      Say "North To Fork"
+      Say "South To Barren"
+      Say "View To Breathtaker"
+   OTHERWISE
+   IFAT Low.N/S.Passage
+      Say "South To Mtking"
+      Say "North To Y2"
+      Say "D To Dirty"
+   OTHERWISE
+   IFAT Secret.N/E.Canyon.2
+      Say "North To Secret.N/S.Canyon.1"
+      Say "East To Secret.E/W.Canyon"
+   OTHERWISE
+   IFAT Causeway.East
+      Say "West To Causeway.West"
+      Say "South To Reservoir"
+   OTHERWISE
+   IFAT Mazed.134
+      Say "NE To Mazed.107"
+      Say "North To Mazed.131"
+      Say "NW To Mazed.132"
+      Say "SE To Mazed.133"
+      Say "East To Mazed.135"
+      Say "D To Mazed.136"
+      Say "South To Mazed.137"
+      Say "Up To Mazed.138"
+      Say "West To Web.Maze.4"
+      Say "SW To Mazed.112"
+   OTHERWISE
+   IFAT Wide.N/S.Canyon
+      Say "South To Tight.Dead.End"
+      Say "North To Tall.E/W.Canyon"
+   OTHERWISE
+   IFAT Mazea.83
+      Say "South To Mazea.By.Pit"
+      Say "East To Mazea.84"
+      Say "West To Mazea.85"
+   OTHERWISE
+   IFAT Bare.Cavern
+      Say "West To Soft"
+      Say "North To Low.Passage"
+   OTHERWISE
+   IFAT Bones.Room
+      Say "East To Low.Room"
+   OTHERWISE
+   IFAT Web.Maze.5
+      Say "North To Web.Maze.6"
+      Say "East To Web.Maze.1"
+      Say "West To Web.Maze.5"
+      Say "South To Web.Maze.4"
+      Say "D To Web.Maze.3"
+   OTHERWISE
+   IFAT Causeway.West
+      Say "East To Causeway.East"
+   OTHERWISE
+   IFAT Bear.Room
+      Say "West To Barren"
+      Say "Fork To Fork"
+      Say "View To Breathtaker"
+   OTHERWISE
+   IFAT Mazea.53
+      Say "West To Mazea.51"
+      Say "North To Mazea.52"
+      Say "South To Mazea.54"
+   OTHERWISE
+   IFAT Ne.Of.Chasm
+      Say "NE To Corridor"
+      Say "Fork To Fork"
+      Say "View To Breathtaker"
+      Say "Barren To Barren"
+   OTHERWISE
+   IFAT Quarters
+      Say "East To Pantry"
+      Say "North To Dungeon"
+      Say "South To Web.Maze.1"
+   OTHERWISE
+   IFAT Mazea.42
+      Say "Up To West.End.Of.Mists"
+      Say "North To Mazea.42"
+      Say "East To Mazea.43"
+      Say "South To Mazea.45"
+      Say "West To Mazea.80"
+   OTHERWISE
+   IFAT Mazea.46
+      Say "West To Mazea.45"
+   OTHERWISE
+   IFAT Bird.Chamber
+      Say "Entrance To In.Cave"
+      Say "East To Canyon"
+      Say "West To Pit"
+   OTHERWISE
+   IFAT Culdesac
+      Say "Up To Ragged.Corridor"
+      Say "Shell To Shell"
+   OTHERWISE
+   IFAT Forest.2
+      Say "North To Road"
+      Say "East To Valley"
+      Say "South To Forest.1"
+   OTHERWISE
+   IFAT Mazea.85
+      Say "East To Mazea.83"
+   OTHERWISE
+   IFAT Sewer.3
+      Say "North To Sewer.2"
+   OTHERWISE
+   IFAT Dirty
+      Say "East To Brink"
+      Say "Up To Low.N/S.Passage"
+      Say "West To Dusty"
+      Say "Bedquilt To Bedquilt"
+   OTHERWISE
+   IFAT Building
+      Say "West To Road"
+      Say "Xyzzy To Debris"
+      Say "Plugh To Y2"
+   OTHERWISE
+   IFAT Sewer.1
+      Say "North To Culvert.South"
+      Say "SE To Sewer.2"
+   OTHERWISE
+   IFAT Immense.N/S.Passages
+      Say "South To Giant.Room"
+   OTHERWISE
+   IFAT Web.Maze.1
+      Say "East To Web.Maze.2"
+      Say "West To Web.Maze.6"
+      Say "Up To Web.Maze.5"
+      Say "D To Web.Maze.3"
+      Say "Pantry To Pantry"
+   OTHERWISE
+   IFAT Mazea.51
+      Say "West To Mazea.49"
+      Say "Up To Mazea.50"
+      Say "East To Mazea.52"
+      Say "South To Mazea.53"
+   OTHERWISE
+   IFAT In.Cave
+      Say "West To Cobbles"
+      Say "Pit To Pit"
+   OTHERWISE
+   IFAT Top.Of.Stalactite
+      Say "North To Secret.N/S.Canyon.2"
+      Say "D To Mazea.45"
+   OTHERWISE
+   IFAT Streampit
+      Say "Up To Brink"
+   OTHERWISE
+   IFAT Valley
+      Say "North To Road"
+      Say "East To Forest.1"
+      Say "South To Slit"
+      Say "Depression To Depression"
+   OTHERWISE
+   IFAT Jumble
+      Say "D To Y2"
+      Say "Up To Mists"
+   OTHERWISE
+   IFAT Top.Of.Chapel
+      Say "D To Chapel"
+      Say "North To South.Attic"
+      Say "West To Pantry"
+   OTHERWISE
+   IFAT Mazed.132
+      Say "NW To Mazed.107"
+      Say "Up To Mazed.131"
+      Say "North To Mazed.133"
+      Say "South To Mazed.134"
+      Say "West To Mazed.135"
+      Say "SW To Mazed.136"
+      Say "NE To Mazed.137"
+      Say "East To Mazed.138"
+      Say "D To Mazed.139"
+      Say "SE To Mazed.112"
+   OTHERWISE
+   IFAT North.Attic
+      Say "South To South.Attic"
+      Say "North To Den"
+   OTHERWISE
+   IFAT SLOPING
+      Say "Down To Low"
+      Say "Up To Sw.Of.Chasm"
+   Else
+      Say "I Don't Know How To Egress From Here"
+   fin
+   quit
+#
+#=====================================================================
+#
+action npcs
+   ifflag magick, nowiz
+      proceed
+   fin
+   ifflag magick, show.npcs
+      unflag magick, show.npcs
+   else
+      flag magick, show.npcs
+   fin
+   quip to.hear.is.to.obey
+#
 #=====================================================================
 #
 # at nowhere
@@ -411,19 +1471,7 @@ action wizard
 #=====================================================================
 #
 init
-   randomise to.hear.is.to.obey, 0
+   randomise your.magnificence, 0
    flag magick, nowiz
-#
-#=====================================================================
-#
-repeat
-   ifflag magick, nowiz
-      proceed
-   fin
-   ifflag magick, show.numbers
-      and
-   ifflag status, moved
-      say location.number, here
-   fin
 #
 #####################################################################

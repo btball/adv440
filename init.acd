@@ -144,6 +144,8 @@ init
       flag place.ptr, no.dwarf
    fin
    itplace place.ptr, forest.1, forest.2
+      flag place.ptr, not.in.cave
+      flag place.ptr, no.dwarf
       flag place.ptr, lit
    fin
 #    itplace place.ptr, rock.shelf, beanstalk.top
@@ -647,6 +649,20 @@ init
 #    flag garden.se, h20.here
 #    flag wrong.venue, h20.here
 #
+#  Flag places with no access
+      flag storeroom, no.access
+      flag sack0, no.access
+      flag .sack1, no.access
+      flag .sack2, no.access
+      flag .sack3, no.access
+      flag .sack4, no.access
+      flag ylem, no.access
+      flag limbo, no.access
+      flag storeroom, no.access
+      flag inhand, no.access
+      flag  dquarters, no.access
+      flag roof, no.access
+#      
 # Declare objects to be referred to in plural.
 #
    flag keys, plural
@@ -714,6 +730,8 @@ init
 #    flag windrose, valued
 #    flag yacht, valued
    unflag tusk, valued
+   unflag first.treasure, valued
+   unflag last.treasure, valued
 #
 # Declare unstable objects.
 #

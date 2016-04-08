@@ -100,6 +100,7 @@ flags place
       special       # Depends on the location
       h20.here      # Water is available here
       indoors       # Not in cave but indoors
+      no.access      # Not accessable 
 #
 # Current usage of 'special' place flag:
 #

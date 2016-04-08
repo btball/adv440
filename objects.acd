@@ -371,7 +371,7 @@ OBJECT RUBY
 OBJECT ORB, CRYSTAL
   crystal orb
   %A crystal orb lies here!
-# object last.treasure
+object last.treasure
 OBJECT -ORB2, GLOBE
   %[A glistening globe lies in a small depression on the sloping cellar
    floor!/
