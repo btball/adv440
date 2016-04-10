@@ -98,8 +98,9 @@ AT road  # checked
       move enter, east, inward, building, building
       move road, west, up, upward, hill, hill
       move downstream, stream, gully, south, down, valley, valley
+      move forest, north, forest.1
       move depression, grate, depression
-      move slit, slit
+#       move slit, slit   # - double check this - I think it was not in 440 btb
 #       move ravine, ravine
 #       move view, stupendous.view
 #       move north, forest.4

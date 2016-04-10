@@ -26,10 +26,27 @@ verb first
 verb npcs
 verb waldo
 verb tremain
-verb egress
-verb perambulate
-verb aqua
+verb egress       # show ways to exit from current location
+verb perambulate  # show locations not yet visited (excludes mazes)
+verb aqua     # list locs with water
+verb listnb   # list neighbor locations
 #
+#=====================================================================
+#
+#  Neighbors ... I'd rather use an array, but they aren't up to the task
+# array  adj.loc, 11   # will need to see if 11 is sufficient btb
+# 
+variable adj.1
+variable adj.2
+variable adj.3
+variable adj.4
+variable adj.5
+variable adj.6
+variable adj.7
+variable adj.8
+variable adj.9
+variable adj.10
+variable adj.11
 #=====================================================================
 #
 var entname
@@ -42,9 +59,22 @@ flags variable
 #
 #=====================================================================
 #
+TEXT has.water
+   ___Has water_
+#
+TEXT is.lit
+   ___Is lit_
+#
+TEXT no.dwarves
+   ___No dwarves allowed_
+#
+TEXT neighbor
+   neighbor {entname}
 TEXT  OBject.is
     # at {ENTNAME}
 #
+TEXT  nb.is
+   nb is #
 TEXT  Not.visited
     {ENTNAME} not yet visited
 #
@@ -493,7 +523,6 @@ action waldo  # where in the world is waldo ?
 #
 action tremain   # find location of any treasures not yet seen 
 #              # n. b. only treasures flagged as such! (tusk doesn't start as a treasure)
-   local temp.ptr
    ifflag magick, nowiz
       proceed
    fin
@@ -509,19 +538,17 @@ action tremain   # find location of any treasures not yet seen
 #---------------------------------------------------------------------
 #
 action perambulate
-   local loc.ptr
-   local temp.ptr
    ifflag magick, nowiz
       proceed
    fin
-   itloc loc.ptr
-      ifflag loc.ptr, been.here
+   itloc place.ptr
+      ifflag place.ptr, been.here
          OR
-      ifflag loc.ptr, in.maze
+      ifflag place.ptr, in.maze
          OR
-      ifflag loc.ptr, no.access
+      ifflag place.ptr, no.access
       else
-          set entname, loc.ptr
+          set entname, place.ptr
           say  not.visited
       fin
    fin
@@ -531,14 +558,12 @@ action perambulate
 #
 #
 action aqua
-   local loc.ptr
-   local temp.ptr
    ifflag magick, nowiz
       proceed
    fin
-   itloc loc.ptr
-      ifflag loc.ptr, h20.here
-          set entname, loc.ptr
+   itloc place.ptr
+      ifflag place.ptr, h20.here
+          set entname, place.ptr
           say  aqua.here
       fin
    fin
@@ -558,6 +583,1075 @@ action first
       quip "Alas, this is not the time or place, {YOUR.MAGNIFICENCE}."
    else
       set daggro,1
+   fin
+   quit
+#
+#---------------------------------------------------------------------
+#
+#
+proc find.neighbor
+   IFAT Secret.Junction
+      lda adj.1, Bedquilt
+      lda adj.2, Secret.N/S.Canyon.2
+      lda adj.3, West.Window
+      set adj.4, 0
+   OTHERWISE
+   IFAT Arched
+      lda adj.1, Shell
+      set adj.2, 0
+   OTHERWISE
+   IFAT Nugget.Room
+      lda adj.1, Mists
+      set adj.2, 0
+   OTHERWISE
+   IFAT Warmjunctn
+      lda adj.1, Fork
+      lda adj.2, View
+      lda adj.3, Crawl
+      set adj.4, 0
+   OTHERWISE
+   IFAT Mazea.44
+      lda adj.1, Mazea.43
+      lda adj.2, Mazea.48
+      lda adj.3, Mazea.50
+      lda adj.4, Mazea.82
+      set adj.5, 0
+   OTHERWISE
+   IFAT Mazea.55
+      lda adj.1, Mazea.52
+      lda adj.2, Mazea.55
+      lda adj.3, Mazea.56
+      lda adj.4, Mazea.By.Pit
+      set adj.5, 0
+   OTHERWISE
+   IFAT Mazea.84
+      lda adj.1, Mazea.By.Pit
+      lda adj.2, Mazea.83
+      lda adj.3, Mazea.114
+      set adj.4, 0
+   OTHERWISE
+   IFAT West.Of.Fissure
+      lda adj.1, East.Of.Fissure
+      lda adj.2, West.End.Of.Mists
+      set adj.3, 0
+   OTHERWISE
+   IFAT Large.Room
+      lda adj.1, Large.Long.Tunnel
+      lda adj.2, Secret.N/S.Canyon.1
+      set adj.3, 0
+   OTHERWISE
+   IFAT Large.Cavern
+      lda adj.1, Low.Passage
+      lda adj.2, Swirling.Mist
+      set adj.3, 0
+   OTHERWISE
+   IFAT Cavern
+      lda adj.1, Immense.N/S.Passages
+      lda adj.2, Incline
+      set adj.3, 0
+   OTHERWISE
+   IFAT Mazea.By.Pit
+      lda adj.1, Bird.Chamber
+      lda adj.2, Mazea.55
+      lda adj.3, Mazea.58
+      lda adj.4, Mazea.83
+      lda adj.5, Mazea.84
+      set adj.6, 0
+   OTHERWISE
+   IFAT Mirror.Canyon
+      lda adj.1, Secret.N/S.Canyon.1
+      lda adj.2, Reservoir
+      set adj.3, 0
+   OTHERWISE
+   IFAT Web.Maze.6
+      lda adj.1, Web.Maze.6
+      lda adj.2, Web.Maze.1
+      lda adj.3, Web.Maze.4
+      lda adj.4, Web.Maze.5
+      lda adj.5, Web.Maze.2
+      set adj.6, 0
+   OTHERWISE
+   IFAT Very.Unsafe
+      lda adj.1, Unsafe
+      set adj.2, 0
+   OTHERWISE
+   IFAT Web.Maze.3
+      lda adj.1, Web.Maze.2
+      lda adj.2, Web.Maze.3
+      lda adj.3, Web.Maze.1
+      lda adj.4, Web.Maze.4
+      lda adj.5, Web.Maze.5
+      set adj.6, 0
+   OTHERWISE
+   IFAT East.Window
+      lda adj.1, Y2
+      lda adj.2, West.Window
+      set adj.3, 0
+   OTHERWISE
+   IFAT Debris
+      lda adj.1, In.Cave
+      lda adj.2, Cobbles
+      lda adj.3, Canyon
+      lda adj.4, Building
+      lda adj.5, Pit
+      set adj.6, 0
+   OTHERWISE
+   IFAT Dead.End.3
+      lda adj.1, Tall.E/W.Canyon
+      set adj.2, 0
+   OTHERWISE
+   IFAT Anteroom
+      lda adj.1, Unsafe
+      lda adj.2, Complex
+      lda adj.3, Witts.End
+      lda adj.4, Chapel
+      set adj.5, 0
+   OTHERWISE
+   IFAT Bedquilt
+      lda adj.1, Complex
+      lda adj.2, Swiss
+      lda adj.3, Large.Room
+      lda adj.4, Slab
+      lda adj.5, Dusty
+      lda adj.6, Secret.Junction
+      lda adj.7, Anteroom
+      set adj.8, 0
+   OTHERWISE
+   IFAT South.Side.Chamber
+      lda adj.1, Mtking
+      lda adj.2, Half.Stairs
+      set adj.3, 0
+   OTHERWISE
+   IFAT Half.Stairs
+      lda adj.1, South.Side.Chamber
+      lda adj.2, Cellar.View
+      set adj.3, 0
+   OTHERWISE
+   IFAT Mazed.138
+      lda adj.1, Mazed.107
+      lda adj.2, Mazed.131
+      lda adj.3, Mazed.132
+      lda adj.4, Mazed.133
+      lda adj.5, Mazed.134
+      lda adj.6, Mazed.135
+      lda adj.7, Mazed.136
+      lda adj.8, Mazed.137
+      lda adj.9, Mazed.139
+      lda adj.10, Mazed.112
+      set adj.11, 0
+   OTHERWISE
+   IFAT Mazea.114
+      lda adj.1, Mazea.84
+      set adj.2, 0
+   OTHERWISE
+   IFAT Mazea.58
+      lda adj.1, Mazea.By.Pit
+      set adj.2, 0
+   OTHERWISE
+   IFAT Curtain.Entrance
+      lda adj.1, Basement
+      lda adj.2, Pantry
+      lda adj.3, Soft
+      set adj.4, 0
+   OTHERWISE
+   IFAT Mists
+      lda adj.1, Nugget.Room
+      lda adj.2, East.Of.Fissure
+      lda adj.3, Mtking
+      lda adj.4, Pit
+      lda adj.5, Jumble
+      set adj.6, 0
+   OTHERWISE
+   IFAT Mazed.137
+      lda adj.1, Mazed.107
+      lda adj.2, Mazed.131
+      lda adj.3, Mazed.132
+      lda adj.4, Mazed.133
+      lda adj.5, Mazed.134
+      lda adj.6, Mazed.135
+      lda adj.7, Mazed.136
+      lda adj.8, Mazed.138
+      lda adj.9, Mazed.139
+      lda adj.10, Mazed.112
+      set adj.11, 0
+   OTHERWISE
+   IFAT Mazea.81
+      lda adj.1, Mazea.80
+      set adj.2, 0
+   OTHERWISE
+   IFAT Long.Hall.East
+      lda adj.1, West.End.Of.Mists
+      lda adj.2, Long.Hall.West
+      lda adj.3, Crossover
+      set adj.4, 0
+   OTHERWISE
+   IFAT Dark
+      lda adj.1, Plover
+      set adj.2, 0
+   OTHERWISE
+   IFAT Dead.End.2
+      lda adj.1, Low
+      set adj.2, 0
+   OTHERWISE
+   IFAT Mazea.86
+      lda adj.1, Mazea.52
+      set adj.2, 0
+   OTHERWISE
+   IFAT Tight.Dead.End
+      lda adj.1, Wide.N/S.Canyon
+      set adj.2, 0
+   OTHERWISE
+   IFAT Crossover
+      lda adj.1, Long.Hall.East
+      lda adj.2, Dead.End.1
+      lda adj.3, West.Side.Chamber
+      lda adj.4, Long.Hall.West
+      set adj.5, 0
+   OTHERWISE
+   IFAT East.Pit.End
+      lda adj.1, Swiss
+      lda adj.2, West.Pit.End
+      lda adj.3, East.Pit
+      set adj.4, 0
+   OTHERWISE
+   IFAT Dungeon.Exit
+      lda adj.1, Well.Bottom
+      set adj.2, 0
+   OTHERWISE
+   IFAT Cellar.View
+      lda adj.1, Half.Stairs
+      set adj.2, 0
+   OTHERWISE
+   IFAT Mazed.139
+      lda adj.1, Mazed.107
+      lda adj.2, Mazed.131
+      lda adj.3, Mazed.132
+      lda adj.4, Mazed.133
+      lda adj.5, Mazed.134
+      lda adj.6, Mazed.135
+      lda adj.7, Mazed.136
+      lda adj.8, Mazed.137
+      lda adj.9, Mazed.138
+      lda adj.10, Mazed.112
+      set adj.11, 0
+   OTHERWISE
+   IFAT Barren
+      lda adj.1, Limestone
+      lda adj.2, Fork
+      lda adj.3, Bear.Room
+      lda adj.4, Breathtaker
+      set adj.5, 0
+   OTHERWISE
+   IFAT Hill
+      lda adj.1, Road
+      lda adj.2, Forest.1
+      set adj.3, 0
+   OTHERWISE
+   IFAT East.Of.Fissure
+      lda adj.1, Mists
+      lda adj.2, West.Of.Fissure
+      set adj.3, 0
+   OTHERWISE
+   IFAT Sewer.4
+      lda adj.1, Culvert.South
+      lda adj.2, Stream.Maze
+      set adj.3, 0
+   OTHERWISE
+   IFAT West.Window
+      lda adj.1, Secret.Junction
+      lda adj.2, East.Window
+      set adj.3, 0
+   OTHERWISE
+   IFAT Mazea.82
+      lda adj.1, Mazea.44
+      set adj.2, 0
+   OTHERWISE
+   IFAT Web.Maze.2
+      lda adj.1, Web.Maze.1
+      lda adj.2, Web.Maze.2
+      lda adj.3, Web.Maze.6
+      lda adj.4, Web.Maze.3
+      lda adj.5, Web.Maze.4
+      set adj.6, 0
+   OTHERWISE
+   IFAT Crypt
+      lda adj.1, Chapel
+      set adj.2, 0
+   OTHERWISE
+   IFAT Sewer.2
+      lda adj.1, Sewer.1
+      lda adj.2, Sewer.3
+      set adj.3, 0
+   OTHERWISE
+   IFAT Mazed.135
+      lda adj.1, Mazed.107
+      lda adj.2, Mazed.131
+      lda adj.3, Mazed.132
+      lda adj.4, Mazed.133
+      lda adj.5, Mazed.134
+      lda adj.6, Mazed.136
+      lda adj.7, Mazed.137
+      lda adj.8, Mazed.138
+      lda adj.9, Mazed.139
+      lda adj.10, Mazed.112
+      set adj.11, 0
+   OTHERWISE
+   IFAT Pit
+      lda adj.1, In.Cave
+      lda adj.2, Bird.Chamber
+      lda adj.3, Mists
+      set adj.4, 0
+   OTHERWISE
+   IFAT Mazed.112
+      lda adj.1, Mazed.131
+      lda adj.2, Mazed.132
+      lda adj.3, Mazed.133
+      lda adj.4, Mazed.134
+      lda adj.5, Mazed.135
+      lda adj.6, Mazed.136
+      lda adj.7, Mazed.137
+      lda adj.8, Mazed.138
+      lda adj.9, Mazed.139
+      lda adj.10, Mazed.140
+      set adj.11, 0
+   OTHERWISE
+   IFAT Secret.N/S.Canyon.1
+      lda adj.1, Large.Room
+      lda adj.2, Slab
+      lda adj.3, Secret.N/E.Canyon.1
+      lda adj.4, Mirror.Canyon
+      lda adj.5, Reservoir
+      set adj.6, 0
+   OTHERWISE
+   IFAT Sewer.5
+      lda adj.1, Culvert.South
+      set adj.2, 0
+   OTHERWISE
+   IFAT Den
+      lda adj.1, North.Attic
+      set adj.2, 0
+   OTHERWISE
+   IFAT Mazea.49
+      lda adj.1, Mazea.50
+      lda adj.2, Mazea.51
+      set adj.3, 0
+   OTHERWISE
+   IFAT Phoney.Shaft
+      lda adj.1, Low.Room
+      lda adj.2, Culvert
+      set adj.3, 0
+   OTHERWISE
+   IFAT East.Pit
+      lda adj.1, East.Pit.End
+      set adj.2, 0
+   OTHERWISE
+   IFAT Stream.Maze
+      lda adj.1, Large.Room
+      lda adj.2, Stream.Maze
+      set adj.3, 0
+   OTHERWISE
+   IFAT Mazed.140
+      lda adj.1, Mazed.112
+      set adj.2, 0
+   OTHERWISE
+   IFAT Fork
+      lda adj.1, Corridor
+      lda adj.2, Warmjunctn
+      lda adj.3, Limestone
+      lda adj.4, Breathtaker
+      lda adj.5, Barren
+      set adj.6, 0
+   OTHERWISE
+   IFAT Ragged.Corridor
+      lda adj.1, Shell
+      lda adj.2, Culdesac
+      set adj.3, 0
+   OTHERWISE
+   IFAT Mazed.131
+      lda adj.1, Mazed.107
+      lda adj.2, Mazed.132
+      lda adj.3, Mazed.133
+      lda adj.4, Mazed.134
+      lda adj.5, Mazed.135
+      lda adj.6, Mazed.136
+      lda adj.7, Mazed.137
+      lda adj.8, Mazed.138
+      lda adj.9, Mazed.139
+      lda adj.10, Mazed.112
+      set adj.11, 0
+   OTHERWISE
+   IFAT Culvert
+      lda adj.1, Sea.View
+      lda adj.2, Culvert.South
+      set adj.3, 0
+   OTHERWISE
+   IFAT Secret.N/E.Canyon.3
+      lda adj.1, Secret.E/W.Canyon
+      set adj.2, 0
+   OTHERWISE
+   IFAT Cellar
+      lda adj.1, Cellar
+      set adj.2, 0
+   OTHERWISE
+   IFAT West.Pit.End
+      lda adj.1, East.Pit.End
+      lda adj.2, Slab
+      lda adj.3, West.Pit
+      set adj.4, 0
+   OTHERWISE
+   IFAT Soft
+      lda adj.1, Swiss
+      lda adj.2, Bare.Cavern
+      lda adj.3, Curtain.Entrance
+      set adj.4, 0
+   OTHERWISE
+   IFAT Breathtaker
+      lda adj.1, Warmjunctn
+      lda adj.2, Fork
+      set adj.3, 0
+   OTHERWISE
+   IFAT Low.Room
+      lda adj.1, Bones.Room
+      lda adj.2, Phoney.Shaft
+      set adj.3, 0
+   OTHERWISE
+   IFAT Mazea.47
+      lda adj.1, Mazea.45
+      set adj.2, 0
+   OTHERWISE
+   IFAT Depression
+      lda adj.1, Forest.1
+      lda adj.2, Road
+      lda adj.3, Slit
+      set adj.4, 0
+   OTHERWISE
+   IFAT Misty
+      lda adj.1, Oriental
+      lda adj.2, Alcove
+      set adj.3, 0
+   OTHERWISE
+   IFAT Brink
+      lda adj.1, Dirty
+      lda adj.2, Streampit
+      set adj.3, 0
+   OTHERWISE
+   IFAT Sw.Of.Chasm
+      lda adj.1, Sloping
+      set adj.2, 0
+   OTHERWISE
+   IFAT Mazea.43
+      lda adj.1, Mazea.42
+      lda adj.2, Mazea.44
+      lda adj.3, Mazea.45
+      set adj.4, 0
+   OTHERWISE
+   IFAT Swirling.Mist
+      lda adj.1, Swirling.Mist
+      set adj.2, 0
+   OTHERWISE
+   IFAT Forest.1
+      lda adj.1, Valley
+      lda adj.2, Forest.2
+      lda adj.3, Forest.1
+      set adj.4, 0
+   OTHERWISE
+   IFAT South.Attic
+      lda adj.1, Top.Of.Chapel
+      lda adj.2, North.Attic
+      lda adj.3, Pantry
+      set adj.4, 0
+   OTHERWISE
+   IFAT Y2
+      lda adj.1, Building
+      lda adj.2, Low.N/S.Passage
+      lda adj.3, Jumble
+      lda adj.4, East.Window
+      lda adj.5, Plover
+      set adj.6, 0
+   OTHERWISE
+   IFAT Dead.End.1
+      lda adj.1, Crossover
+      set adj.2, 0
+   OTHERWISE
+   IFAT Slit
+      lda adj.1, Road
+      lda adj.2, Valley
+      lda adj.3, Forest.1
+      lda adj.4, Depression
+      set adj.5, 0
+   OTHERWISE
+   IFAT Mazea.80
+      lda adj.1, Mazea.42
+      lda adj.2, Mazea.80
+      lda adj.3, Mazea.80
+      lda adj.4, Mazea.81
+      set adj.5, 0
+   OTHERWISE
+   IFAT Low.Passage
+      lda adj.1, Bare.Cavern
+      lda adj.2, Large.Cavern
+      set adj.3, 0
+   OTHERWISE
+   IFAT Secret.N/E.Canyon.1
+      lda adj.1, Secret.N/S.Canyon.1
+      lda adj.2, Dragon.Blocks.Way
+      set adj.3, 0
+   OTHERWISE
+   IFAT Sea.View
+      lda adj.1, Culvert
+      set adj.2, 0
+   OTHERWISE
+   IFAT Alcove
+      lda adj.1, Misty
+      lda adj.2, Plover
+      set adj.3, 0
+   OTHERWISE
+   IFAT Shaft
+      lda adj.1, Low.Room
+      lda adj.2, Culvert
+      set adj.3, 0
+   OTHERWISE
+   IFAT Low
+      lda adj.1, Bedquilt
+      lda adj.2, Sloping
+      lda adj.3, Dead.End.2
+      lda adj.4, Oriental
+      set adj.5, 0
+   OTHERWISE
+   IFAT Secret.E/W.Canyon
+      lda adj.1, Mtking
+      lda adj.2, Secret.N/E.Canyon.3
+      lda adj.3, Wide.N/S.Canyon
+      set adj.4, 0
+   OTHERWISE
+   IFAT Culvert.South
+      lda adj.1, Culvert
+      lda adj.2, Sewer.1
+      lda adj.3, Sewer.5
+      lda adj.4, Sewer.4
+      set adj.5, 0
+   OTHERWISE
+   IFAT Long.Hall.West
+      lda adj.1, Long.Hall.East
+      lda adj.2, Crossover
+      lda adj.3, Mazed.107
+      set adj.4, 0
+   OTHERWISE
+   IFAT Witts.End
+      lda adj.1, Anteroom
+      lda adj.2, Crawl.Caved.In.2
+      set adj.3, 0
+   OTHERWISE
+   IFAT Ne.Repository
+      lda adj.1, Sw.Repository
+      set adj.2, 0
+   OTHERWISE
+   IFAT Giant.Room
+      lda adj.1, Narrow.Corridor
+      lda adj.2, Immense.N/S.Passages
+      set adj.3, 0
+   OTHERWISE
+   IFAT Shell
+      lda adj.1, Arched
+      lda adj.2, Ragged.Corridor
+      lda adj.3, Complex
+      set adj.4, 0
+   OTHERWISE
+   IFAT Cobbles
+      lda adj.1, In.Cave
+      lda adj.2, Debris
+      lda adj.3, Pit
+      set adj.4, 0
+   OTHERWISE
+   IFAT Reservoir
+      lda adj.1, Mirror.Canyon
+      lda adj.2, Causeway.East
+      set adj.3, 0
+   OTHERWISE
+   IFAT Basement
+      lda adj.1, Cellar
+      lda adj.2, Curtain.Entrance
+      set adj.3, 0
+   OTHERWISE
+   IFAT Large.Long.Tunnel
+      lda adj.1, Slab
+      lda adj.2, Large.Room
+      set adj.3, 0
+   OTHERWISE
+   IFAT Stable
+      lda adj.1, Chapel
+      set adj.2, 0
+   OTHERWISE
+   IFAT Incline
+      lda adj.1, Cavern
+      lda adj.2, Low
+      set adj.3, 0
+   OTHERWISE
+   IFAT Mazea.48
+      lda adj.1, Mazea.44
+      set adj.2, 0
+   OTHERWISE
+   IFAT Mazed.107
+      lda adj.1, Mazed.131
+      lda adj.2, Mazed.132
+      lda adj.3, Mazed.133
+      lda adj.4, Mazed.134
+      lda adj.5, Mazed.135
+      lda adj.6, Mazed.136
+      lda adj.7, Mazed.137
+      lda adj.8, Mazed.138
+      lda adj.9, Mazed.139
+      lda adj.10, Long.Hall.West
+      set adj.11, 0
+   OTHERWISE
+   IFAT Mazea.87
+      lda adj.1, Mazea.45
+      set adj.2, 0
+   OTHERWISE
+   IFAT Unsafe
+      lda adj.1, Anteroom
+      lda adj.2, Very.Unsafe
+      set adj.3, 0
+   OTHERWISE
+   IFAT Tall.E/W.Canyon
+      lda adj.1, Wide.N/S.Canyon
+      lda adj.2, Dead.End.3
+      lda adj.3, Swiss
+      set adj.4, 0
+   OTHERWISE
+   IFAT Mazed.133
+      lda adj.1, Mazed.107
+      lda adj.2, Mazed.131
+      lda adj.3, Mazed.132
+      lda adj.4, Mazed.134
+      lda adj.5, Mazed.135
+      lda adj.6, Mazed.136
+      lda adj.7, Mazed.137
+      lda adj.8, Mazed.138
+      lda adj.9, Mazed.139
+      lda adj.10, Mazed.112
+      set adj.11, 0
+   OTHERWISE
+   IFAT Web.Maze.4
+      lda adj.1, Web.Maze.2
+      lda adj.2, Web.Maze.3
+      lda adj.3, Web.Maze.6
+      lda adj.4, Web.Maze.5
+      set adj.5, 0
+   OTHERWISE
+   IFAT Corridor
+      lda adj.1, Ne.Of.Chasm
+      lda adj.2, Fork
+      lda adj.3, Breathtaker
+      lda adj.4, Barren
+      set adj.5, 0
+   OTHERWISE
+   IFAT Mazea.50
+      lda adj.1, Mazea.44
+      lda adj.2, Mazea.49
+      lda adj.3, Mazea.51
+      lda adj.4, Mazea.52
+      set adj.5, 0
+   OTHERWISE
+   IFAT Dusty
+      lda adj.1, Dirty
+      lda adj.2, Complex
+      lda adj.3, Bedquilt
+      set adj.4, 0
+   OTHERWISE
+   IFAT Complex
+      lda adj.1, Dusty
+      lda adj.2, Bedquilt
+      lda adj.3, Shell
+      lda adj.4, Anteroom
+      set adj.5, 0
+   OTHERWISE
+   IFAT Oriental
+      lda adj.1, Swiss
+      lda adj.2, Low
+      lda adj.3, Misty
+      set adj.4, 0
+   OTHERWISE
+   IFAT Canyon
+      lda adj.1, In.Cave
+      lda adj.2, Debris
+      lda adj.3, Bird.Chamber
+      lda adj.4, Pit
+      set adj.5, 0
+   OTHERWISE
+   IFAT West.End.Of.Mists
+      lda adj.1, Mazea.42
+      lda adj.2, West.Of.Fissure
+      lda adj.3, Long.Hall.East
+      set adj.4, 0
+   OTHERWISE
+   IFAT Mazea.52
+      lda adj.1, Mazea.50
+      lda adj.2, Mazea.51
+      lda adj.3, Mazea.52
+      lda adj.4, Mazea.53
+      lda adj.5, Mazea.55
+      lda adj.6, Mazea.86
+      set adj.7, 0
+   OTHERWISE
+   IFAT Pantry
+      lda adj.1, Top.Of.Chapel
+      lda adj.2, South.Attic
+      lda adj.3, Curtain.Entrance
+      set adj.4, 0
+   OTHERWISE
+   IFAT Mazea.56
+      lda adj.1, Mazea.55
+      set adj.2, 0
+   OTHERWISE
+   IFAT Mazea.45
+      lda adj.1, Mazea.42
+      lda adj.2, Mazea.43
+      lda adj.3, Mazea.46
+      lda adj.4, Mazea.47
+      lda adj.5, Mazea.87
+      set adj.6, 0
+   OTHERWISE
+   IFAT Swiss
+      lda adj.1, Bedquilt
+      lda adj.2, East.Pit.End
+      lda adj.3, Tall.E/W.Canyon
+      lda adj.4, Soft
+      lda adj.5, Oriental
+      set adj.6, 0
+   OTHERWISE
+   IFAT Mtking
+      lda adj.1, Mists
+      lda adj.2, Secret.E/W.Canyon
+      set adj.3, 0
+   OTHERWISE
+   IFAT Mazea.54
+      lda adj.1, Mazea.53
+      set adj.2, 0
+   OTHERWISE
+   IFAT Secret.N/S.Canyon.2
+      lda adj.1, Secret.Junction
+      lda adj.2, Bedquilt
+      lda adj.3, Top.Of.Stalactite
+      set adj.4, 0
+   OTHERWISE
+   IFAT Storeroom
+      lda adj.1, 163
+      set adj.2, 0
+   OTHERWISE
+   IFAT Slab
+      lda adj.1, West.Pit.End
+      lda adj.2, Large.Long.Tunnel
+      lda adj.3, Bedquilt
+      set adj.4, 0
+   OTHERWISE
+   IFAT Well.Bottom
+      lda adj.1, Dungeon.Exit
+      set adj.2, 0
+   OTHERWISE
+   IFAT Road
+      lda adj.1, Hill
+      lda adj.2, Building
+      lda adj.3, Valley
+      lda adj.4, Forest.1
+      lda adj.5, Depression
+      set adj.6, 0
+   OTHERWISE
+   IFAT Mazed.136
+      lda adj.1, Mazed.107
+      lda adj.2, Mazed.131
+      lda adj.3, Mazed.132
+      lda adj.4, Mazed.133
+      lda adj.5, Mazed.134
+      lda adj.6, Mazed.135
+      lda adj.7, Mazed.137
+      lda adj.8, Mazed.138
+      lda adj.9, Mazed.139
+      lda adj.10, Mazed.112
+      set adj.11, 0
+   OTHERWISE
+   IFAT Narrow.Corridor
+      lda adj.1, West.Pit
+      lda adj.2, Giant.Room
+      set adj.3, 0
+   OTHERWISE
+   IFAT Sw.Repository
+      lda adj.1, Ne.Repository
+      set adj.2, 0
+   OTHERWISE
+   IFAT Beams
+      lda adj.1, Chapel
+      set adj.2, 0
+   OTHERWISE
+   IFAT Chapel
+      lda adj.1, Beams
+      lda adj.2, Anteroom
+      lda adj.3, Stable
+      lda adj.4, Top.Of.Chapel
+      lda adj.5, Crypt
+      set adj.6, 0
+   OTHERWISE
+   IFAT West.Side.Chamber
+      lda adj.1, Mtking
+      lda adj.2, Crossover
+      set adj.3, 0
+   OTHERWISE
+   IFAT Plover
+      lda adj.1, Alcove
+      lda adj.2, Y2
+      lda adj.3, Dark
+      set adj.4, 0
+   OTHERWISE
+   IFAT West.Pit
+      lda adj.1, West.Pit.End
+      set adj.2, 0
+   OTHERWISE
+   IFAT Limestone
+      lda adj.1, Fork
+      lda adj.2, Barren
+      lda adj.3, Breathtaker
+      set adj.4, 0
+   OTHERWISE
+   IFAT Low.N/S.Passage
+      lda adj.1, Mtking
+      lda adj.2, Y2
+      lda adj.3, Dirty
+      set adj.4, 0
+   OTHERWISE
+   IFAT Secret.N/E.Canyon.2
+      lda adj.1, Secret.N/S.Canyon.1
+      lda adj.2, Secret.E/W.Canyon
+      set adj.3, 0
+   OTHERWISE
+   IFAT Causeway.East
+      lda adj.1, Causeway.West
+      lda adj.2, Reservoir
+      set adj.3, 0
+   OTHERWISE
+   IFAT Mazed.134
+      lda adj.1, Mazed.107
+      lda adj.2, Mazed.131
+      lda adj.3, Mazed.132
+      lda adj.4, Mazed.133
+      lda adj.5, Mazed.135
+      lda adj.6, Mazed.136
+      lda adj.7, Mazed.137
+      lda adj.8, Mazed.138
+      lda adj.9, Web.Maze.4
+      lda adj.10, Mazed.112
+      set adj.11, 0
+   OTHERWISE
+   IFAT Wide.N/S.Canyon
+      lda adj.1, Tight.Dead.End
+      lda adj.2, Tall.E/W.Canyon
+      set adj.3, 0
+   OTHERWISE
+   IFAT Mazea.83
+      lda adj.1, Mazea.By.Pit
+      lda adj.2, Mazea.84
+      lda adj.3, Mazea.85
+      set adj.4, 0
+   OTHERWISE
+   IFAT Bare.Cavern
+      lda adj.1, Soft
+      lda adj.2, Low.Passage
+      set adj.3, 0
+   OTHERWISE
+   IFAT Bones.Room
+      lda adj.1, Low.Room
+      set adj.2, 0
+   OTHERWISE
+   IFAT Web.Maze.5
+      lda adj.1, Web.Maze.6
+      lda adj.2, Web.Maze.1
+      lda adj.3, Web.Maze.5
+      lda adj.4, Web.Maze.4
+      lda adj.5, Web.Maze.3
+      set adj.6, 0
+   OTHERWISE
+   IFAT Causeway.West
+      lda adj.1, Causeway.East
+      set adj.2, 0
+   OTHERWISE
+   IFAT Bear.Room
+      lda adj.1, Barren
+      lda adj.2, Fork
+      lda adj.3, Breathtaker
+      set adj.4, 0
+   OTHERWISE
+   IFAT Mazea.53
+      lda adj.1, Mazea.51
+      lda adj.2, Mazea.52
+      lda adj.3, Mazea.54
+      set adj.4, 0
+   OTHERWISE
+   IFAT Ne.Of.Chasm
+      lda adj.1, Corridor
+      lda adj.2, Fork
+      lda adj.3, Breathtaker
+      lda adj.4, Barren
+      set adj.5, 0
+   OTHERWISE
+   IFAT Quarters
+      lda adj.1, Pantry
+      lda adj.2, Dungeon
+      lda adj.3, Web.Maze.1
+      set adj.4, 0
+   OTHERWISE
+   IFAT Mazea.42
+      lda adj.1, West.End.Of.Mists
+      lda adj.2, Mazea.42
+      lda adj.3, Mazea.43
+      lda adj.4, Mazea.45
+      lda adj.5, Mazea.80
+      set adj.6, 0
+   OTHERWISE
+   IFAT Mazea.46
+      lda adj.1, Mazea.45
+      set adj.2, 0
+   OTHERWISE
+   IFAT Bird.Chamber
+      lda adj.1, In.Cave
+      lda adj.2, Canyon
+      lda adj.3, Pit
+      set adj.4, 0
+   OTHERWISE
+   IFAT Culdesac
+      lda adj.1, Ragged.Corridor
+      lda adj.2, Shell
+      set adj.3, 0
+   OTHERWISE
+   IFAT Forest.2
+      lda adj.1, Road
+      lda adj.2, Valley
+      lda adj.3, Forest.1
+      set adj.4, 0
+   OTHERWISE
+   IFAT Mazea.85
+      lda adj.1, Mazea.83
+      set adj.2, 0
+   OTHERWISE
+   IFAT Sewer.3
+      lda adj.1, Sewer.2
+      set adj.2, 0
+   OTHERWISE
+   IFAT Dirty
+      lda adj.1, Brink
+      lda adj.2, Low.N/S.Passage
+      lda adj.3, Dusty
+      lda adj.4, Bedquilt
+      set adj.5, 0
+   OTHERWISE
+   IFAT Building
+      lda adj.1, Road
+      lda adj.2, Debris
+      lda adj.3, Y2
+      set adj.4, 0
+   OTHERWISE
+   IFAT Sewer.1
+      lda adj.1, Culvert.South
+      lda adj.2, Sewer.2
+      set adj.3, 0
+   OTHERWISE
+   IFAT Immense.N/S.Passages
+      lda adj.1, Giant.Room
+      set adj.2, 0
+   OTHERWISE
+   IFAT Web.Maze.1
+      lda adj.1, Web.Maze.2
+      lda adj.2, Web.Maze.6
+      lda adj.3, Web.Maze.5
+      lda adj.4, Web.Maze.3
+      lda adj.5, Pantry
+      set adj.6, 0
+   OTHERWISE
+   IFAT Mazea.51
+      lda adj.1, Mazea.49
+      lda adj.2, Mazea.50
+      lda adj.3, Mazea.52
+      lda adj.4, Mazea.53
+      set adj.5, 0
+   OTHERWISE
+   IFAT In.Cave
+      lda adj.1, Cobbles
+      lda adj.2, Pit
+      set adj.3, 0
+   OTHERWISE
+   IFAT Top.Of.Stalactite
+      lda adj.1, Secret.N/S.Canyon.2
+      lda adj.2, Mazea.45
+      set adj.3, 0
+   OTHERWISE
+   IFAT Streampit
+      lda adj.1, Brink
+      set adj.2, 0
+   OTHERWISE
+   IFAT Valley
+      lda adj.1, Road
+      lda adj.2, Forest.1
+      lda adj.3, Slit
+      lda adj.4, Depression
+      set adj.5, 0
+   OTHERWISE
+   IFAT Jumble
+      lda adj.1, Y2
+      lda adj.2, Mists
+      set adj.3, 0
+   OTHERWISE
+   IFAT Top.Of.Chapel
+      lda adj.1, Chapel
+      lda adj.2, South.Attic
+      lda adj.3, Pantry
+      set adj.4, 0
+   OTHERWISE
+   IFAT Mazed.132
+      lda adj.1, Mazed.107
+      lda adj.2, Mazed.131
+      lda adj.3, Mazed.133
+      lda adj.4, Mazed.134
+      lda adj.5, Mazed.135
+      lda adj.6, Mazed.136
+      lda adj.7, Mazed.137
+      lda adj.8, Mazed.138
+      lda adj.9, Mazed.139
+      lda adj.10, Mazed.112
+      set adj.11, 0
+   OTHERWISE
+   IFAT North.Attic
+      lda adj.1, South.Attic
+      lda adj.2, Den
+      set adj.3, 0
+   else
+      set adj.1, 0  # Can't find the neighbors for "Here"
+   fin
+#
+#---------------------------------------------------------------------
+#
+action listnb
+   local counter
+   ifflag magick, nowiz
+      proceed
+   fin
+   call find.neighbor
+   lda temp.ptr, adj.1  # point to the address of the first neighbor
+   iterate counter 1, 11
+      eval place.ptr, temp.ptr
+      ifeq place.ptr, 0
+         break
+      fin
+      set entname, place.ptr
+      say neighbor 
+      ifflag place.ptr, h20.here
+         say has.water
+      fin
+      ifflag place.ptr, lit
+          say is.lit
+      fin
+      ifflag place.ptr, no.dwarf
+          say no.dwarves
+      fin
+#       say blank
+      add temp.ptr, 1
    fin
    quit
 #
@@ -1209,7 +2303,7 @@ action egress
       Say "West To Hill"
       Say "East To Building"
       Say "South To Valley"
-      Say "East To Forest.1"
+      Say "North To Forest.1"
       Say "Depression To Depression"
    OTHERWISE
    IFAT Mazed.136
