@@ -30,6 +30,7 @@ verb egress       # show ways to exit from current location
 verb perambulate  # show locations not yet visited (excludes mazes)
 verb aqua     # list locs with water
 verb listnb   # list neighbor locations
+verb dwarfloc  # list locations of dwarves
 #
 #=====================================================================
 #
@@ -59,17 +60,11 @@ flags variable
 #
 #=====================================================================
 #
-TEXT has.water
-   ___Has water_
-#
-TEXT is.lit
-   ___Is lit_
-#
-TEXT no.dwarves
-   ___No dwarves allowed_
+Text treasure.here
+   _# here
 #
 TEXT neighbor
-   neighbor {entname}
+   /neighbor {entname}
 TEXT  OBject.is
     # at {ENTNAME}
 #
@@ -80,6 +75,9 @@ TEXT  Not.visited
 #
 text aqua.here
    {ENTNAME} has water
+#
+text dwarf.loc
+   dwarf at {ENTNAME}
 #
 text YOU.GLOW
     [Your body is surrounded by a magical glow./The glow surrounding
@@ -1627,8 +1625,26 @@ proc find.neighbor
 #
 #---------------------------------------------------------------------
 #
+action dwarfloc    # list location of all dwarves
+   local d.loc
+   local d.ptr
+   ifflag magick, nowiz
+      proceed
+   fin
+   iterate d.loc, dwarf0, pirate-1   # Loop through NPCs
+      locate d.ptr, d.loc       # His current location
+      set entname, d.ptr
+      say dwarf.loc
+   fin
+   quit
+#
+#---------------------------------------------------------------------
+#
 action listnb
    local counter
+   local tr.ptr
+   local d.loc
+   local d.ptr
    ifflag magick, nowiz
       proceed
    fin
@@ -1640,17 +1656,31 @@ action listnb
          break
       fin
       set entname, place.ptr
-      say neighbor 
+      say neighbor
+#  find out if any of the neighbors has treasure
+      iterate obj.ptr first.treasure+1, last.treasure-1
+         locate  tr.ptr, obj.ptr  # find out where the treasure is
+         ifeq tr.ptr, place.ptr
+            say treasure.here, obj.ptr
+         fin
+      fin
+# find out if there's a dwarf lurking at any of the neighbors
+      iterate d.loc, dwarf0, pirate-1   # Loop through NPCs
+         locate d.ptr, d.loc       # His current location
+         ifeq d.ptr, place.ptr
+            say "_dwarf here!"
+         fin
+      fin
       ifflag place.ptr, h20.here
-         say has.water
+         say "f: _has water_"
       fin
       ifflag place.ptr, lit
-          say is.lit
+          say "f: _is lit_"
       fin
       ifflag place.ptr, no.dwarf
-          say no.dwarves
+          say "f: _no dwarves allowed_"
       fin
-#       say blank
+      say blank
       add temp.ptr, 1
    fin
    quit
